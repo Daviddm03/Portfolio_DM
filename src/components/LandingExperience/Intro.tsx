@@ -12,13 +12,17 @@ export function Intro({
   return (
     <div
       ref={introRef}
-      className="absolute inset-0 flex items-center px-6 py-24 opacity-0 md:px-10"
+      id="introduction"
+      tabIndex={-1}
+      role="region"
+      aria-labelledby="introduction-title"
+      className="landing-intro absolute inset-0 flex items-center px-6 pb-12 pt-24 md:px-10"
     >
-      <div className="grid w-full grid-cols-1 gap-14 md:grid-cols-12">
+      <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-12 md:gap-14">
         <div className="md:col-span-3">
           <span
             data-intro-detail
-            className="text-xs uppercase tracking-[0.25em] text-[#2563ff]"
+            className="text-xs uppercase tracking-[0.25em] text-[#7cb9ff]"
           >
             01 — Introduction
           </span>
@@ -31,17 +35,18 @@ export function Intro({
           <div className="overflow-hidden">
             <h2
               data-intro-title
-              className="text-[clamp(4rem,8vw,9rem)] font-semibold uppercase leading-[0.82] tracking-[-0.07em]"
+              id="introduction-title"
+              className="text-[clamp(2.7rem,8vw,9rem)] font-semibold uppercase leading-[0.9] tracking-[-0.07em]"
             >
-              I'm David
+              I'm David Montano
               <span className="text-[#2563ff]">.</span>
             </h2>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-16">
+          <div className="mt-8 grid grid-cols-1 gap-5 md:mt-12 md:grid-cols-2 md:gap-12">
             <p
               data-intro-detail
-              className="max-w-lg text-lg leading-relaxed text-[#8491a7] md:text-xl"
+              className="max-w-lg text-base leading-relaxed text-[#8491a7] md:text-xl"
             >
               Software developer based in Porto, focused on turning ideas and
               real-world problems into functional software.
@@ -49,7 +54,7 @@ export function Intro({
 
             <p
               data-intro-detail
-              className="max-w-lg text-lg leading-relaxed text-[#8491a7] md:text-xl"
+              className="max-w-lg text-base leading-relaxed text-[#8491a7] md:text-xl"
             >
               Building my path through software engineering, hands-on projects
               and a strong foundation in programming fundamentals.
@@ -58,10 +63,10 @@ export function Intro({
 
           <div
             data-intro-detail
-            className="mt-20 grid grid-cols-2 gap-x-8 gap-y-8 border-t border-[#1a2232] pt-6 md:grid-cols-3"
+            className="mt-8 grid grid-cols-2 gap-x-5 gap-y-5 border-t border-[#1a2232] pt-6 md:mt-12 md:grid-cols-3"
           >
             <div>
-              <span className="block text-[9px] uppercase tracking-[0.24em] text-[#8491a7]">
+              <span className="block text-xs text-[#8491a7]">
                 Based in
               </span>
 
@@ -71,7 +76,7 @@ export function Intro({
             </div>
 
             <div>
-              <span className="block text-[9px] uppercase tracking-[0.24em] text-[#8491a7]">
+              <span className="block text-xs text-[#8491a7]">
                 Education
               </span>
 
@@ -81,7 +86,7 @@ export function Intro({
             </div>
 
             <div className="col-span-2 md:col-span-1">
-              <span className="block text-[9px] uppercase tracking-[0.24em] text-[#8491a7]">
+              <span className="block text-xs text-[#8491a7]">
                 Focus
               </span>
 
@@ -93,15 +98,13 @@ export function Intro({
 
           <div
             data-intro-detail
-            className="mt-16 flex items-center gap-4"
+            className="mt-8 flex items-center gap-4 md:mt-12"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-[#2563ff] shadow-[0_0_12px_#2563ff]" />
-
-            <span className="text-[9px] uppercase tracking-[0.25em] text-[#8491a7]">
+            <span className="text-xs text-[#8491a7]">
               Selected work below
             </span>
 
-            <span className="text-xs text-[#2563ff]">
+            <span className="text-xs text-[#7cb9ff]">
               ↓
             </span>
           </div>

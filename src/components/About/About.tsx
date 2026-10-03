@@ -60,7 +60,8 @@ export function About() {
   const journeyLineRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
+    const media = gsap.matchMedia()
+    media.add('(prefers-reduced-motion: no-preference)', () => {
       /*
        * ABOUT INTRO
        */
@@ -70,6 +71,7 @@ export function About() {
           start: 'top 78%',
           end: 'top 20%',
           scrub: 1,
+          once: true,
         },
       })
 
@@ -100,6 +102,10 @@ export function About() {
           0.15,
         )
 
+      // Initialize the populated timeline before later triggers refresh it.
+      // A once-only timeline can remove itself during a deferred refresh.
+      intro.scrollTrigger?.refresh()
+
       /*
        * JOURNEY LINE
        */
@@ -128,7 +134,6 @@ export function About() {
       gsap.utils
         .toArray<HTMLElement>('[data-journey-item]')
         .forEach((item) => {
-          const number = item.querySelector('[data-journey-number]')
           const content = item.querySelector('[data-journey-content]')
           const dot = item.querySelector('[data-journey-dot]')
 
@@ -138,6 +143,7 @@ export function About() {
               start: 'top 80%',
               end: 'center 58%',
               scrub: 1,
+              once: true,
             },
           })
 
@@ -149,15 +155,6 @@ export function About() {
               ease: 'back.out(2)',
             })
             .from(
-              number,
-              {
-                opacity: 0,
-                x: -30,
-                duration: 0.25,
-              },
-              0,
-            )
-            .from(
               content,
               {
                 opacity: 0,
@@ -167,6 +164,8 @@ export function About() {
               },
               0.05,
             )
+
+          timeline.scrollTrigger?.refresh()
         })
 
       /*
@@ -191,13 +190,16 @@ export function About() {
       )
     }, sectionRef)
 
-    return () => ctx.revert()
+    return () => media.revert()
   }, [])
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden px-6 pb-40 pt-24 md:px-10"
+      id="about"
+      tabIndex={-1}
+      aria-labelledby="about-title"
+      className="relative overflow-hidden px-6 pb-20 pt-24 md:px-10 md:pb-24"
     >
       {/* Decorative background word */}
       <div
@@ -213,14 +215,8 @@ export function About() {
         ref={eyebrowRef}
         className="relative z-10 mb-16 flex items-center gap-5"
       >
-        <span className="text-xs uppercase tracking-[0.25em] text-[#2563ff]">
-          05
-        </span>
-
-        <div className="h-px flex-1 bg-[#1a2232]" />
-
-        <span className="text-xs uppercase tracking-[0.25em] text-[#8491a7]">
-          About
+        <span className="text-xs uppercase tracking-[0.25em] text-[#7cb9ff]">
+          04 — About
         </span>
       </div>
 
@@ -229,7 +225,8 @@ export function About() {
         <div className="overflow-hidden md:col-span-8">
           <h2
             ref={titleRef}
-            className="text-[clamp(4.5rem,11vw,12rem)] font-semibold uppercase leading-[0.76] tracking-[-0.075em]"
+            id="about-title"
+            className="text-[clamp(3rem,11vw,12rem)] font-semibold uppercase leading-[0.85] tracking-[-0.075em]"
           >
             Beyond
             <br />
@@ -259,7 +256,7 @@ export function About() {
       {/* Journey */}
       <div
         ref={journeyRef}
-        className="relative z-10 mx-auto mt-40 max-w-6xl"
+        className="relative z-10 mx-auto mt-20 max-w-6xl md:mt-24"
       >
         {/* Timeline */}
         <div className="absolute bottom-0 left-1.75 top-0 w-px bg-[#1a2232] md:left-1/2 md:-translate-x-1/2">
@@ -271,113 +268,20 @@ export function About() {
 
         {journey.map((item, index) => {
           const isRight = index % 2 !== 0
-
           return (
-            <article
-              key={item.number}
-              data-journey-item
-              className="relative grid min-h-[55vh] grid-cols-[16px_1fr] gap-8 md:grid-cols-2 md:gap-0"
-            >
-              {/* Mobile dot */}
-              <div className="relative z-20 flex justify-center md:hidden">
-                <div
-                  data-journey-dot
-                  className="mt-2 h-4 w-4 rounded-full border-2 border-[#2563ff] bg-[#05070d] shadow-[0_0_18px_rgba(37,99,255,0.5)]"
-                />
-              </div>
-
-              {/* Desktop left */}
-              <div className="hidden justify-end pr-16 md:flex">
-                {!isRight && (
-                  <div
-                    data-journey-content
-                    className="max-w-md text-right"
-                  >
-                    <span className="text-xs uppercase tracking-[0.25em] text-[#2563ff]">
-                      {item.label}
-                    </span>
-
-                    <h3 className="mt-5 text-4xl font-medium uppercase leading-[0.95] tracking-[-0.045em] lg:text-5xl">
-                      {item.title}
-                    </h3>
-
-                    <p className="mt-6 leading-relaxed text-[#8491a7]">
-                      {item.description}
-                    </p>
-                  </div>
-                )}
-
-                {isRight && (
-                  <span
-                    data-journey-number
-                    className="font-mono text-xs text-[#8491a7]"
-                  >
-                    {item.number}
-                  </span>
-                )}
-              </div>
-
-              {/* Desktop center dot */}
-              <div
-                data-journey-dot
-                className="absolute left-1/2 top-1 z-20 hidden h-5 w-5 -translate-x-1/2 rounded-full border-2 border-[#2563ff] bg-[#05070d] shadow-[0_0_20px_rgba(37,99,255,0.55)] md:block"
-              />
-
-              {/* Desktop right */}
-              <div className="hidden pl-16 md:flex">
-                {isRight && (
-                  <div
-                    data-journey-content
-                    className="max-w-md"
-                  >
-                    <span className="text-xs uppercase tracking-[0.25em] text-[#2563ff]">
-                      {item.label}
-                    </span>
-
-                    <h3 className="mt-5 text-4xl font-medium uppercase leading-[0.95] tracking-[-0.045em] lg:text-5xl">
-                      {item.title}
-                    </h3>
-
-                    <p className="mt-6 leading-relaxed text-[#8491a7]">
-                      {item.description}
-                    </p>
-                  </div>
-                )}
-
-                {!isRight && (
-                  <span
-                    data-journey-number
-                    className="font-mono text-xs text-[#8491a7]"
-                  >
-                    {item.number}
-                  </span>
-                )}
-              </div>
-
-              {/* Mobile content */}
-              <div className="pb-28 md:hidden">
-                <div data-journey-content>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs uppercase tracking-[0.25em] text-[#2563ff]">
-                      {item.label}
-                    </span>
-
-                    <span
-                      data-journey-number
-                      className="font-mono text-xs text-[#8491a7]"
-                    >
-                      {item.number}
-                    </span>
-                  </div>
-
-                  <h3 className="mt-5 text-4xl font-medium uppercase leading-[0.95] tracking-[-0.045em]">
-                    {item.title}
-                  </h3>
-
-                  <p className="mt-6 max-w-md leading-relaxed text-[#8491a7]">
-                    {item.description}
-                  </p>
-                </div>
+            <article key={item.number} data-journey-item
+              className="relative grid grid-cols-[16px_minmax(0,1fr)] gap-6 pb-16 md:grid-cols-2 md:gap-0 md:pb-20">
+              <div data-journey-dot aria-hidden="true"
+                className="absolute left-0 top-1 z-20 h-4 w-4 rounded-full border-2 border-[#2563ff] bg-[#05070d] md:left-1/2 md:h-5 md:w-5 md:-translate-x-1/2" />
+              <span data-journey-number aria-hidden="true"
+                className={`absolute top-1 hidden font-mono text-xs text-[#8491a7] md:block ${isRight ? 'right-[calc(50%+4rem)]' : 'left-[calc(50%+4rem)]'}`}>
+                {item.number}
+              </span>
+              <div data-journey-content
+                className={`col-start-2 min-w-0 md:row-start-1 ${isRight ? 'md:col-start-2 md:pl-16' : 'md:col-start-1 md:pr-16 md:text-right'}`}>
+                <span className="text-xs uppercase tracking-[0.16em] text-[#7cb9ff]">{item.label}</span>
+                <h3 className="mt-4 text-[clamp(1.75rem,3.3vw,3rem)] font-medium uppercase leading-[1.05] tracking-[-0.045em]">{item.title}</h3>
+                <p className="mt-5 leading-relaxed text-[#8491a7]">{item.description}</p>
               </div>
             </article>
           )
@@ -397,18 +301,6 @@ export function About() {
         </div>
       </div>
 
-      {/* Next section */}
-      <div className="relative z-10 mt-40 flex items-center gap-5">
-        <span className="text-[10px] uppercase tracking-[0.25em] text-[#8491a7]">
-          Tools & technologies
-        </span>
-
-        <div className="h-px flex-1 bg-[#1a2232]" />
-
-        <span className="text-[#2563ff]">
-          ↓
-        </span>
-      </div>
     </section>
   )
 }

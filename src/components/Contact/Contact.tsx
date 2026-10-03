@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { revealGroup } from '../../animations/reveal'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -21,80 +22,28 @@ export function Contact() {
   const closingTextRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      /*
+    const media = gsap.matchMedia()
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      /**
        * SECTION INTRO
        */
-      const intro = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 78%',
-          end: 'top 20%',
-          scrub: 1,
-        },
-      })
+      revealGroup([eyebrowRef.current, pretitleRef.current, titleRef.current], sectionRef.current)
+      revealGroup(infoRef.current, infoRef.current)
 
-      intro
-        .from(eyebrowRef.current, {
-          opacity: 0,
-          x: -30,
-          duration: 0.25,
-        })
-        .from(
-          pretitleRef.current,
-          {
-            opacity: 0,
-            y: 30,
-            duration: 0.25,
-          },
-          0.05,
-        )
-        .from(
-          titleRef.current,
-          {
-            y: 150,
-            opacity: 0,
-            duration: 0.6,
-            ease: 'power4.out',
-          },
-          0.1,
-        )
-        .from(
-          infoRef.current,
-          {
-            opacity: 0,
-            y: 50,
-            duration: 0.4,
-            ease: 'power3.out',
-          },
-          0.3,
-        )
-
-      /*
+      /**
        * CONTACT LINKS
        */
-      gsap.from('[data-contact-link]', {
-        opacity: 0,
-        x: -50,
-        stagger: 0.12,
+      const links = sectionRef.current?.querySelector('[data-contact-links]') ?? null
+      revealGroup(links, links)
 
-        scrollTrigger: {
-          trigger: '[data-contact-links]',
-          start: 'top 85%',
-          end: 'center 65%',
-          scrub: 1,
-        },
-      })
-
-      /*
+      /**
        * CLOSING MOMENT
        */
       const closing = gsap.timeline({
         scrollTrigger: {
           trigger: closingRef.current,
-          start: 'top 75%',
-          end: 'bottom bottom',
-          scrub: 1,
+          start: 'top 92%',
+          once: true,
         },
       })
 
@@ -115,7 +64,9 @@ export function Contact() {
           0.2,
         )
 
-      /*
+      closing.scrollTrigger?.refresh()
+
+      /**
        * BACKGROUND BLUE GLOW
        */
       gsap.fromTo(
@@ -139,19 +90,22 @@ export function Contact() {
       )
     }, sectionRef)
 
-    return () => ctx.revert()
+    return () => media.revert()
   }, [])
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
     })
   }
 
   return (
     <section
       ref={sectionRef}
+      id="contact"
+      tabIndex={-1}
+      aria-labelledby="contact-title"
       className="relative min-h-screen overflow-hidden px-6 pt-24 md:px-10"
     >
       {/* Background glow */}
@@ -164,16 +118,12 @@ export function Contact() {
       {/* Section label */}
       <div
         ref={eyebrowRef}
+        data-scroll-reveal
+        data-reveal
         className="relative z-10 mb-20 flex items-center gap-5"
       >
-        <span className="text-xs uppercase tracking-[0.25em] text-[#2563ff]">
-          07
-        </span>
-
-        <div className="h-px flex-1 bg-[#1a2232]" />
-
-        <span className="text-xs uppercase tracking-[0.25em] text-[#8491a7]">
-          Contact
+        <span className="text-xs uppercase tracking-[0.25em] text-[#7cb9ff]">
+          06 — Contact
         </span>
       </div>
 
@@ -181,6 +131,8 @@ export function Contact() {
       <div className="relative z-10">
         <p
           ref={pretitleRef}
+          data-scroll-reveal
+          data-reveal
           className="mb-8 text-xs uppercase tracking-[0.28em] text-[#8491a7]"
         >
           Have an idea?
@@ -189,7 +141,10 @@ export function Contact() {
         <div className="overflow-hidden">
           <h2
             ref={titleRef}
-            className="text-[clamp(4.5rem,13vw,14rem)] font-semibold uppercase leading-[0.74] tracking-[-0.08em]"
+            data-scroll-reveal
+            data-reveal
+            id="contact-title"
+            className="text-[clamp(2.9rem,12vw,14rem)] font-semibold uppercase leading-[0.85] tracking-[-0.08em]"
           >
             Let's Build
             <br />
@@ -199,6 +154,7 @@ export function Contact() {
 
               <span
                 ref={dotRef}
+                aria-hidden="true"
                 className="mb-[0.08em] ml-[0.04em] inline-block h-[0.12em] w-[0.12em] origin-center rounded-full bg-[#2563ff] shadow-[0_0_25px_rgba(37,99,255,0.7)]"
               />
             </span>
@@ -208,18 +164,12 @@ export function Contact() {
 
       {/* Contact information */}
       <div
-        ref={infoRef}
-        className="relative z-10 mt-28 grid grid-cols-1 gap-16 border-t border-[#1a2232] pt-10 md:grid-cols-12"
+        className="relative z-10 mt-16 grid grid-cols-1 gap-16 border-t border-[#1a2232] pt-10 md:grid-cols-12"
       >
         {/* Availability */}
-        <div className="md:col-span-4">
-          <span className="text-[10px] uppercase tracking-[0.25em] text-[#8491a7]">
-            Currently
-          </span>
-
-          <div className="mt-5 flex items-center gap-3">
+        <div ref={infoRef} data-scroll-reveal data-reveal className="md:col-span-4">
+          <div className="flex items-center gap-3">
             <span className="relative flex h-3 w-3 items-center justify-center">
-              <span className="absolute h-full w-full animate-ping rounded-full bg-[#2563ff] opacity-30" />
 
               <span className="relative h-2 w-2 rounded-full bg-[#2563ff]" />
             </span>
@@ -238,15 +188,18 @@ export function Contact() {
         {/* Links */}
         <div
           data-contact-links
+          data-scroll-reveal
+          data-reveal
           className="md:col-span-8"
         >
           {/* Email */}
           <a
             data-contact-link
+            data-reveal
             href={`mailto:${EMAIL}`}
-            className="group grid grid-cols-[80px_1fr_auto] items-center border-b border-[#1a2232] py-6"
+            className="group grid grid-cols-[56px_minmax(0,1fr)_auto] gap-3 md:grid-cols-[80px_minmax(0,1fr)_auto] items-center border-b border-[#1a2232] py-6"
           >
-            <span className="text-[10px] uppercase tracking-[0.22em] text-[#8491a7]">
+            <span className="text-xs uppercase tracking-[0.22em] text-[#8491a7]">
               Email
             </span>
 
@@ -262,12 +215,13 @@ export function Contact() {
           {/* GitHub */}
           <a
             data-contact-link
+            data-reveal
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group grid grid-cols-[80px_1fr_auto] items-center border-b border-[#1a2232] py-6"
+            className="group grid grid-cols-[56px_minmax(0,1fr)_auto] gap-3 md:grid-cols-[80px_minmax(0,1fr)_auto] items-center border-b border-[#1a2232] py-6"
           >
-            <span className="text-[10px] uppercase tracking-[0.22em] text-[#8491a7]">
+            <span className="text-xs uppercase tracking-[0.22em] text-[#8491a7]">
               GitHub
             </span>
 
@@ -283,12 +237,13 @@ export function Contact() {
           {/* LinkedIn */}
           <a
             data-contact-link
+            data-reveal
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group grid grid-cols-[80px_1fr_auto] items-center border-b border-[#1a2232] py-6"
+            className="group grid grid-cols-[56px_minmax(0,1fr)_auto] gap-3 md:grid-cols-[80px_minmax(0,1fr)_auto] items-center border-b border-[#1a2232] py-6"
           >
-            <span className="text-[10px] uppercase tracking-[0.22em] text-[#8491a7]">
+            <span className="text-xs uppercase tracking-[0.22em] text-[#8491a7]">
               LinkedIn
             </span>
 
@@ -306,13 +261,13 @@ export function Contact() {
       {/* Closing */}
       <div
         ref={closingRef}
-        className="relative z-10 flex min-h-[65vh] flex-col justify-end pb-8 pt-32"
+        className="relative z-10 flex flex-col justify-end pb-8 pt-24"
       >
         <div
           ref={closingTextRef}
           className="border-t border-[#1a2232] pt-6"
         >
-          <div className="flex flex-col gap-8 text-[10px] uppercase tracking-[0.22em] text-[#8491a7] md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-col gap-8 text-xs uppercase tracking-[0.22em] text-[#8491a7] md:flex-row md:items-end md:justify-between">
             <div>
               <span className="block">
                 David Montaño

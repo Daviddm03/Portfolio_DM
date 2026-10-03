@@ -10,7 +10,6 @@ gsap.registerPlugin(ScrollTrigger)
 export function LandingExperience() {
   const sectionRef = useRef<HTMLElement>(null)
 
-  const heroContentRef = useRef<HTMLDivElement>(null)
   const softwareRef = useRef<HTMLSpanElement>(null)
   const developerRef = useRef<HTMLSpanElement>(null)
   const dotRef = useRef<HTMLSpanElement>(null)
@@ -20,7 +19,31 @@ export function LandingExperience() {
   const introTextRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
+    // Keep the native position when media changes replace the landing pin.
+    // Public revert/matchMedia events bracket GSAP's pin restoration.
+    // https://gsap.com/docs/v3/Plugins/ScrollTrigger/static.addEventListener()/
+    let savedScroll = window.scrollY
+    let restoring = false
+    let refreshFrame = 0
+    const rememberScroll = () => { if (!restoring) savedScroll = window.scrollY }
+    const freezeScroll = () => { restoring = true }
+    const refreshFinished = () => {
+      cancelAnimationFrame(refreshFrame)
+      refreshFrame = requestAnimationFrame(() => {
+        restoring = false
+        savedScroll = window.scrollY
+      })
+    }
+    const restoreScroll = () => {
+      window.scrollTo({ top: savedScroll, behavior: 'instant' })
+      ScrollTrigger.update()
+    }
+    window.addEventListener('scroll', rememberScroll, { passive: true })
+    ScrollTrigger.addEventListener('revert', freezeScroll)
+    ScrollTrigger.addEventListener('refresh', refreshFinished)
+    ScrollTrigger.addEventListener('matchMedia', restoreScroll)
+    const media = gsap.matchMedia()
+    media.add('(prefers-reduced-motion: no-preference) and (min-width: 768px) and (min-height: 600px), (prefers-reduced-motion: no-preference) and (min-height: 760px)', () => {
       const heroMeta = gsap.utils.toArray<HTMLElement>(
         '[data-hero-meta]',
       )
@@ -65,7 +88,7 @@ export function LandingExperience() {
        */
 
       gsap.set(introRef.current, {
-        opacity: 0,
+        autoAlpha: 0,
       })
 
       gsap.set(introTextRef.current, {
@@ -117,6 +140,7 @@ export function LandingExperience() {
         },
 
         scrollTrigger: {
+          id: 'landing-journey',
           trigger: sectionRef.current,
           start: 'top top',
 
@@ -126,7 +150,7 @@ export function LandingExperience() {
            * We are no longer spending part of this distance
            * hiding the Intro.
            */
-          end: '+=180%',
+          end: '+=120%',
 
           pin: true,
 
@@ -197,7 +221,7 @@ export function LandingExperience() {
         .to(
           introRef.current,
           {
-            opacity: 1,
+            autoAlpha: 1,
             duration: 0.25,
             ease: 'power2.out',
           },
@@ -242,32 +266,31 @@ export function LandingExperience() {
          * When the user reaches the end of the pin,
          * nothing disappears.
          */
-
-        .to({}, { duration: 0.5 })
     }, sectionRef)
 
     return () => {
-      ctx.revert()
+      media.revert()
+      window.removeEventListener('scroll', rememberScroll)
+      ScrollTrigger.removeEventListener('revert', freezeScroll)
+      ScrollTrigger.removeEventListener('refresh', refreshFinished)
+      ScrollTrigger.removeEventListener('matchMedia', restoreScroll)
+      cancelAnimationFrame(refreshFrame)
     }
   }, [])
 
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen overflow-hidden"
+      id="top"
+      className="landing-experience relative h-svh overflow-hidden"
     >
-      <Intro
-        introRef={introRef}
-        introTextRef={introTextRef}
-      />
-
       <Hero
         softwareRef={softwareRef}
         developerRef={developerRef}
-        heroContentRef={heroContentRef}
         dotRef={dotRef}
         roleRef={roleRef}
       />
+      <Intro introRef={introRef} introTextRef={introTextRef} />
     </section>
   )
 }

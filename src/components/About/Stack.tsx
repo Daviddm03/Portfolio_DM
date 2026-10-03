@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { revealGroup } from '../../animations/reveal'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -64,106 +65,17 @@ export function Stack() {
   const scannerRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
+    const media = gsap.matchMedia()
+    media.add('(prefers-reduced-motion: no-preference)', () => {
       /*
        * SECTION INTRO
        */
-      const intro = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 78%',
-          end: 'top 20%',
-          scrub: 1,
-        },
-      })
-
-      intro
-        .from(eyebrowRef.current, {
-          opacity: 0,
-          x: -30,
-          duration: 0.25,
-        })
-        .from(
-          titleRef.current,
-          {
-            y: 130,
-            opacity: 0,
-            duration: 0.55,
-            ease: 'power4.out',
-          },
-          0,
-        )
-        .from(
-          descriptionRef.current,
-          {
-            opacity: 0,
-            y: 50,
-            duration: 0.4,
-            ease: 'power3.out',
-          },
-          0.15,
-        )
-
-      /*
-       * MATRIX ENTRANCE
-       */
-      gsap.from(matrixRef.current, {
-        opacity: 0,
-        y: 80,
-
-        scrollTrigger: {
-          trigger: matrixRef.current,
-          start: 'top 85%',
-          end: 'top 55%',
-          scrub: 1,
-        },
-      })
+      revealGroup([eyebrowRef.current, titleRef.current, descriptionRef.current], sectionRef.current)
 
       /*
        * MATRIX ROWS
        */
-      gsap.utils
-        .toArray<HTMLElement>('[data-stack-row]')
-        .forEach((row) => {
-          const number = row.querySelector('[data-stack-number]')
-          const label = row.querySelector('[data-stack-label]')
-          const technologies = row.querySelectorAll('[data-technology]')
-
-          const timeline = gsap.timeline({
-            scrollTrigger: {
-              trigger: row,
-              start: 'top 82%',
-              end: 'center 60%',
-              scrub: 1,
-            },
-          })
-
-          timeline
-            .from(number, {
-              opacity: 0,
-              x: -20,
-              duration: 0.2,
-            })
-            .from(
-              label,
-              {
-                opacity: 0,
-                x: -30,
-                duration: 0.25,
-              },
-              0,
-            )
-            .from(
-              technologies,
-              {
-                opacity: 0,
-                y: 25,
-                stagger: 0.06,
-                duration: 0.3,
-              },
-              0.08,
-            )
-        })
+      sectionRef.current?.querySelectorAll('[data-stack-row], [data-stack-support]').forEach(group => revealGroup(group, group))
 
       /*
        * BLUE SCANNER
@@ -171,17 +83,18 @@ export function Stack() {
       gsap.fromTo(
         scannerRef.current,
         {
-          yPercent: -100,
+          y: 0,
         },
         {
-          yPercent: 500,
+          y: () => matrixRef.current?.clientHeight ?? 0,
           ease: 'none',
 
           scrollTrigger: {
             trigger: matrixRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
+            start: 'top 65%',
+            end: 'bottom 65%',
             scrub: 1,
+            invalidateOnRefresh: true,
           },
         },
       )
@@ -208,13 +121,16 @@ export function Stack() {
       )
     }, sectionRef)
 
-    return () => ctx.revert()
+    return () => media.revert()
   }, [])
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden px-6 pb-40 pt-24 md:px-10"
+      id="stack"
+      tabIndex={-1}
+      aria-labelledby="stack-title"
+      className="relative overflow-hidden px-6 pb-24 pt-24 md:px-10"
     >
       {/* Decorative word */}
       <div
@@ -228,16 +144,12 @@ export function Stack() {
       {/* Section label */}
       <div
         ref={eyebrowRef}
+        data-scroll-reveal
+        data-reveal
         className="relative z-10 mb-16 flex items-center gap-5"
       >
-        <span className="text-xs uppercase tracking-[0.25em] text-[#2563ff]">
-          06
-        </span>
-
-        <div className="h-px flex-1 bg-[#1a2232]" />
-
-        <span className="text-xs uppercase tracking-[0.25em] text-[#8491a7]">
-          Tools & Technologies
+        <span className="text-xs uppercase tracking-[0.25em] text-[#7cb9ff]">
+          05 — Stack
         </span>
       </div>
 
@@ -246,7 +158,10 @@ export function Stack() {
         <div className="overflow-hidden md:col-span-8">
           <h2
             ref={titleRef}
-            className="text-[clamp(4.5rem,11vw,12rem)] font-semibold uppercase leading-[0.76] tracking-[-0.075em]"
+            data-scroll-reveal
+            data-reveal
+            id="stack-title"
+            className="text-[clamp(2.8rem,10vw,12rem)] font-semibold uppercase leading-[0.85] tracking-[-0.075em]"
           >
             What I
             <br />
@@ -258,6 +173,8 @@ export function Stack() {
         <div className="flex items-end md:col-span-4">
           <p
             ref={descriptionRef}
+            data-scroll-reveal
+            data-reveal
             className="max-w-md text-lg leading-relaxed text-[#8491a7]"
           >
             Technologies are tools. I choose them around the problem,
@@ -269,11 +186,13 @@ export function Stack() {
       {/* Technical matrix */}
       <div
         ref={matrixRef}
-        className="relative z-10 mx-auto mt-32 max-w-7xl overflow-hidden border-t border-[#1a2232]"
+        data-stack-matrix
+        className="relative z-10 mx-auto mt-16 max-w-7xl overflow-hidden border-t border-[#1a2232]"
       >
         {/* Scanner */}
         <div
           ref={scannerRef}
+          data-stack-scanner
           aria-hidden="true"
           className="pointer-events-none absolute left-0 right-0 top-0 z-20 h-px bg-[#2563ff] opacity-60 shadow-[0_0_30px_4px_rgba(37,99,255,0.2)]"
         />
@@ -282,13 +201,15 @@ export function Stack() {
           <div
             key={group.label}
             data-stack-row
-            className="group grid grid-cols-1 border-b border-[#1a2232] py-10 transition-colors duration-500 hover:bg-[#0a1020]/40 md:grid-cols-12 md:py-14"
+            data-scroll-reveal
+            data-reveal
+            className="group grid grid-cols-1 border-b border-[#1a2232] py-10 transition-colors duration-500 hover:bg-[#0a1020]/40 md:grid-cols-12 md:py-10"
           >
             {/* Number */}
             <div className="md:col-span-1">
               <span
                 data-stack-number
-                className="font-mono text-xs text-[#2563ff]"
+                className="font-mono text-xs text-[#7cb9ff]"
               >
                 {group.number}
               </span>
@@ -310,7 +231,7 @@ export function Stack() {
                 <span
                   key={technology}
                   data-technology
-                  className="border border-[#1a2232] px-4 py-2 text-xs uppercase tracking-[0.16em] text-[#8491a7] transition-all duration-300 hover:border-[#2563ff] hover:text-[#f4f7ff]"
+                  className="border border-[#1a2232] px-4 py-2 text-xs uppercase tracking-[0.16em] text-[#8491a7] transition-[color,border-color] duration-300 hover:border-[#2563ff] hover:text-[#f4f7ff]"
                 >
                   {technology}
                 </span>
@@ -321,10 +242,10 @@ export function Stack() {
       </div>
 
       {/* Philosophy */}
-      <div className="relative z-10 mx-auto mt-32 max-w-7xl">
-        <div className="grid grid-cols-1 gap-12 border-b border-[#1a2232] pb-24 md:grid-cols-12">
+      <div data-stack-support data-scroll-reveal data-reveal className="relative z-10 mx-auto mt-20 max-w-7xl">
+        <div className="grid grid-cols-1 gap-12 border-b border-[#1a2232] pb-16 md:grid-cols-12">
           <div className="md:col-span-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#2563ff]">
+            <span className="text-xs uppercase tracking-[0.25em] text-[#7cb9ff]">
               Approach
             </span>
           </div>
@@ -343,7 +264,7 @@ export function Stack() {
       </div>
 
       {/* Current focus */}
-      <div className="relative z-10 mx-auto mt-20 max-w-7xl">
+      <div data-stack-support data-scroll-reveal data-reveal className="relative z-10 mx-auto mt-20 max-w-7xl">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
           <div className="md:col-span-3">
             <span className="text-xs uppercase tracking-[0.25em] text-[#8491a7]">
@@ -354,7 +275,6 @@ export function Stack() {
           <div className="md:col-span-9">
             <div className="flex flex-wrap gap-x-10 gap-y-5">
               <div className="flex items-center gap-3">
-                <span className="h-2 w-2 rounded-full bg-[#2563ff] shadow-[0_0_12px_#2563ff]" />
 
                 <span className="text-sm uppercase tracking-[0.16em]">
                   Frontend Engineering
@@ -362,7 +282,6 @@ export function Stack() {
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="h-2 w-2 rounded-full bg-[#2563ff] shadow-[0_0_12px_#2563ff]" />
 
                 <span className="text-sm uppercase tracking-[0.16em]">
                   Software Engineering
@@ -370,7 +289,6 @@ export function Stack() {
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="h-2 w-2 rounded-full bg-[#2563ff] shadow-[0_0_12px_#2563ff]" />
 
                 <span className="text-sm uppercase tracking-[0.16em]">
                   Product Development
@@ -381,18 +299,6 @@ export function Stack() {
         </div>
       </div>
 
-      {/* Transition to final section */}
-      <div className="relative z-10 mt-40 flex items-center gap-5">
-        <span className="text-[10px] uppercase tracking-[0.25em] text-[#8491a7]">
-          One last thing
-        </span>
-
-        <div className="h-px flex-1 bg-[#1a2232]" />
-
-        <span className="text-[#2563ff]">
-          ↓
-        </span>
-      </div>
     </section>
   )
 }

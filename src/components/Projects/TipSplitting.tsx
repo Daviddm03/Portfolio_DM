@@ -1,39 +1,28 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { LivePreview } from './LivePreview'
+import { revealGroup } from '../../animations/reveal'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const distributions = [
-  {
-    name: 'Sky Bar',
-    value: '€ 1,428.40',
-    width: 86,
-  },
-  {
-    name: 'Wine Bar 1638',
-    value: '€ 1,196.20',
-    width: 72,
-  },
-  {
-    name: 'Restaurant 1638',
-    value: '€ 1,282.60',
-    width: 77,
-  },
-  {
-    name: 'Pool Bar',
-    value: '€ 919.30',
-    width: 55,
-  },
-]
+const PROJECT_URL =
+  'https://tip-splitting-calculator.vercel.app/#calculation'
+
+const GITHUB_URL =
+  'https://github.com/Daviddm03/tipSplittingCalculator'
 
 export function TipSplitting() {
   const sectionRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const interfaceRef = useRef<HTMLDivElement>(null)
+  const previewRef = useRef<HTMLAnchorElement>(null)
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
+    const media = gsap.matchMedia()
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      const metadata = sectionRef.current?.querySelector('[data-scroll-reveal]') ?? null
+      revealGroup(metadata, metadata)
+
       gsap.from(contentRef.current, {
         y: 50,
         opacity: 0,
@@ -42,190 +31,97 @@ export function TipSplitting() {
         scrollTrigger: {
           trigger: contentRef.current,
           start: 'top 82%',
-          toggleActions: 'play none none reverse',
+          once: true,
         },
       })
 
-      const calculator = gsap.timeline({
+      gsap.from(previewRef.current, {
+        y: 70,
+        rotateX: 5,
+        scale: 0.96,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out',
+        transformPerspective: 1200,
+        transformOrigin: 'center center',
         scrollTrigger: {
-          trigger: interfaceRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse',
+          trigger: previewRef.current,
+          start: 'top 88%',
+          once: true,
         },
       })
-
-      calculator
-        .from(interfaceRef.current, {
-          y: 60,
-          scale: 0.97,
-          opacity: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-        })
-        .from(
-          '[data-distribution-row]',
-          {
-            x: -20,
-            opacity: 0,
-            stagger: 0.08,
-            duration: 0.35,
-            ease: 'power2.out',
-          },
-          '-=0.4',
-        )
-        .from(
-          '[data-distribution-bar]',
-          {
-            scaleX: 0,
-            transformOrigin: 'left center',
-            stagger: 0.08,
-            duration: 0.5,
-            ease: 'power3.inOut',
-          },
-          '-=0.45',
-        )
     }, sectionRef)
 
-    return () => ctx.revert()
+    return () => media.revert()
   }, [])
 
   return (
     <section
       ref={sectionRef}
+      aria-labelledby="tip-title"
       className="relative px-6 pt-20 md:px-10 md:pt-24"
     >
       {/* Project metadata */}
-      <div className="mb-12 flex items-center justify-between">
-        <span className="text-xs uppercase tracking-[0.2em] text-[#2563ff]">
+      <div data-scroll-reveal data-reveal className="mb-12 flex items-center justify-between border-t border-[#1a2232] pt-5">
+        <span className="text-xs uppercase tracking-[0.2em] text-[#7cb9ff]">
           02 / 03
         </span>
 
-        <div className="flex items-center gap-3">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#2563ff] shadow-[0_0_10px_#2563ff]" />
-
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[#8491a7]">
-            In development
-          </span>
-        </div>
+        <span className="text-xs uppercase tracking-[0.2em] text-[#8491a7]">
+          2026
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-14">
-        <div
-          ref={contentRef}
-          className="flex flex-col justify-between lg:col-span-5"
-        >
+      {/* Project */}
+      <div
+        className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-10"
+      >
+        {/* Project information */}
+        <div ref={contentRef} data-reveal className="flex min-w-0 flex-col justify-between lg:col-span-5">
           <div>
-            <h2 className="text-[clamp(3.2rem,5.5vw,6.5rem)] font-semibold uppercase leading-[0.8] tracking-[-0.065em]">
+            <h3 id="tip-title" className="text-[clamp(2.3rem,5.3vw,6.5rem)] font-semibold uppercase leading-[0.9] tracking-[-0.065em]">
               Tip Splitting
               <br />
               Calculator
               <span className="text-[#2563ff]">.</span>
-            </h2>
+            </h3>
 
-            <p className="mt-8 max-w-md text-base leading-relaxed text-[#8491a7] md:text-lg">
+            <p className="mt-8 max-w-sm text-base leading-relaxed text-[#8491a7] md:text-lg">
               A tool for calculating and distributing staff tips across
               multiple hotel outlets using working hours and distribution
               rules.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.18em] text-[#8491a7]">
+            <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs uppercase tracking-widest text-[#8491a7]">
               <span>JavaScript</span>
               <span>HTML</span>
               <span>CSS</span>
               <span>Local Storage</span>
             </div>
           </div>
-        </div>
 
-        <div
-          ref={interfaceRef}
-          className="overflow-hidden border border-[#1a2232] bg-[#080c16] shadow-[0_30px_100px_rgba(37,99,255,0.05)] lg:col-span-7"
-        >
-          <div className="flex items-center justify-between border-b border-[#1a2232] px-5 py-4">
-            <div className="flex items-center gap-3">
-              <span className="h-2 w-2 rounded-full bg-[#2563ff] shadow-[0_0_12px_#2563ff]" />
-
-              <span className="text-[9px] uppercase tracking-[0.22em] text-[#8491a7]">
-                Distribution Engine
-              </span>
-            </div>
-
-            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#8491a7]">
-              Demo
-            </span>
-          </div>
-
-          <div className="p-6 md:p-8">
-            <div className="border-b border-[#1a2232] pb-7">
-              <span className="text-[9px] uppercase tracking-[0.22em] text-[#8491a7]">
-                Total tips
+          <div className="mt-10">
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-3 text-xs uppercase tracking-[0.2em]"
+            >
+              <span className="border-b border-[#2563ff] pb-1 transition-colors duration-300 group-hover:text-[#7cb9ff]">
+                View source code
               </span>
 
-              <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
-                <span className="text-[clamp(2.8rem,5vw,5.5rem)] font-semibold leading-none tracking-[-0.06em]">
-                  € 4,826
-                  <span className="text-[#2563ff]">
-                    .50
-                  </span>
-                </span>
-
-                <span className="pb-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[#8491a7]">
-                  Preview
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              {distributions.map((item, index) => (
-                <div
-                  key={item.name}
-                  data-distribution-row
-                  className="grid grid-cols-[32px_1fr] items-center gap-4 border-b border-[#1a2232] py-5"
-                >
-                  <span className="font-mono text-[10px] text-[#8491a7]">
-                    0{index + 1}
-                  </span>
-
-                  <div>
-                    <div className="flex items-center justify-between gap-5">
-                      <span className="text-xs uppercase tracking-[0.12em]">
-                        {item.name}
-                      </span>
-
-                      <span className="text-xs font-medium">
-                        {item.value}
-                      </span>
-                    </div>
-
-                    <div className="mt-3 h-px overflow-hidden bg-[#1a2232]">
-                      <div
-                        data-distribution-bar
-                        style={{
-                          width: `${item.width}%`,
-                        }}
-                        className="h-0.5 bg-[#2563ff] shadow-[0_0_12px_rgba(37,99,255,0.5)]"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-5 flex items-center justify-between">
-              <span className="text-[9px] uppercase tracking-[0.2em] text-[#8491a7]">
-                Demo data
+              <span className="text-[#2563ff] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                ↗
               </span>
-
-              <span className="text-[9px] uppercase tracking-[0.2em] text-[#2563ff]">
-                Multi-outlet
-              </span>
-            </div>
+            </a>
           </div>
         </div>
+
+        {/* Live preview */}
+        <LivePreview ref={previewRef} url={PROJECT_URL} name="Tip Splitting Calculator" className="lg:col-span-7" />
       </div>
 
-      {/* Standard project divider */}
-      <div className="mt-24 h-px w-full bg-[#1a2232]" />
     </section>
   )
 }

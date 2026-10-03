@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { revealGroup } from '../../animations/reveal'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -10,21 +11,21 @@ const projects = [
     name: 'push_swap',
     description:
       'Sorting integers with a restricted set of operations while optimizing the number of moves.',
-    output: '100 numbers → optimized instruction set',
+    source: 'https://github.com/Daviddm03/push_swap-42',
   },
   {
     command: './so_long',
     name: 'so_long',
     description:
       'A small 2D game built in C, working with maps, textures, movement and event handling.',
-    output: 'map.ber → game initialized',
+    source: 'https://github.com/Daviddm03/so_long-42',
   },
   {
     command: './philo 5 800 200 200',
     name: 'philosophers',
     description:
       'A concurrency simulation built with threads and mutexes, exploring synchronization, shared resources and race conditions.',
-    output: '5 philosophers → simulation running',
+    source: 'https://github.com/Daviddm03/philo',
   },
 ]
 
@@ -34,7 +35,11 @@ export function FortyTwo() {
   const terminalRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
+    const media = gsap.matchMedia()
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      const metadata = sectionRef.current?.querySelector('[data-scroll-reveal]') ?? null
+      revealGroup(metadata, metadata)
+
       gsap.from(contentRef.current, {
         y: 50,
         opacity: 0,
@@ -43,7 +48,7 @@ export function FortyTwo() {
         scrollTrigger: {
           trigger: contentRef.current,
           start: 'top 82%',
-          toggleActions: 'play none none reverse',
+          once: true,
         },
       })
 
@@ -51,7 +56,7 @@ export function FortyTwo() {
         scrollTrigger: {
           trigger: terminalRef.current,
           start: 'top 85%',
-          toggleActions: 'play none none reverse',
+          once: true,
         },
       })
 
@@ -75,6 +80,8 @@ export function FortyTwo() {
           '-=0.4',
         )
 
+      terminal.scrollTrigger?.refresh()
+
       gsap.utils.toArray<HTMLElement>('[data-42-project]').forEach((project) => {
         gsap.from(project, {
           y: 40,
@@ -84,42 +91,42 @@ export function FortyTwo() {
           scrollTrigger: {
             trigger: project,
             start: 'top 88%',
-            toggleActions: 'play none none reverse',
+            once: true,
           },
         })
       })
     }, sectionRef)
 
-    return () => ctx.revert()
+    return () => media.revert()
   }, [])
 
   return (
     <section
       ref={sectionRef}
-      className="relative px-6 pb-32 pt-20 md:px-10 md:pb-40 md:pt-24"
+      aria-labelledby="forty-two-title"
+      className="relative px-6 pb-20 pt-20 md:px-10 md:pb-24 md:pt-24"
     >
       {/* Project metadata */}
-      <div className="mb-12 flex items-center justify-between">
-        <span className="text-xs uppercase tracking-[0.2em] text-[#2563ff]">
+      <div data-scroll-reveal data-reveal className="mb-12 flex items-center justify-between border-t border-[#1a2232] pt-5">
+        <span className="text-xs uppercase tracking-[0.2em] text-[#7cb9ff]">
           03 / 03
         </span>
 
         <span className="text-xs uppercase tracking-[0.2em] text-[#8491a7]">
-          42 Porto
+          2024
         </span>
       </div>
 
       <div
-        ref={contentRef}
-        className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-14"
+        className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-10"
       >
-        <div className="lg:col-span-5">
-          <h2 className="text-[clamp(4rem,7vw,8rem)] font-semibold uppercase leading-[0.78] tracking-[-0.07em]">
+        <div ref={contentRef} data-reveal className="min-w-0 lg:col-span-5">
+          <h3 id="forty-two-title" className="text-[clamp(3rem,7vw,8rem)] font-semibold uppercase leading-[0.78] tracking-[-0.07em]">
             42
             <br />
             Porto
             <span className="text-[#2563ff]">.</span>
-          </h2>
+          </h3>
 
           <p className="mt-8 max-w-md text-base leading-relaxed text-[#8491a7] md:text-lg">
             Learning software engineering from the foundations through
@@ -127,7 +134,7 @@ export function FortyTwo() {
             solving in C.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#8491a7]">
+          <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs uppercase tracking-[0.16em] text-[#8491a7]">
             <span>C</span>
             <span>UNIX</span>
             <span>Algorithms</span>
@@ -137,7 +144,8 @@ export function FortyTwo() {
 
         <div
           ref={terminalRef}
-          className="overflow-hidden border border-[#1a2232] bg-[#05070d] font-mono shadow-[0_30px_100px_rgba(37,99,255,0.05)] lg:col-span-7"
+          data-reveal
+          className="min-w-0 overflow-hidden border border-[#1a2232] bg-[#05070d] font-mono shadow-[0_30px_100px_rgba(37,99,255,0.05)] lg:col-span-7"
         >
           <div className="flex h-11 items-center justify-between border-b border-[#1a2232] bg-[#080c16] px-4">
             <div className="flex items-center gap-2">
@@ -146,18 +154,18 @@ export function FortyTwo() {
               <span className="h-2 w-2 rounded-full bg-[#8491a7]/30" />
             </div>
 
-            <span className="text-[9px] tracking-[0.2em] text-[#8491a7]">
+            <span className="text-xs tracking-[0.2em] text-[#8491a7]">
               david@42porto
             </span>
 
-            <span className="text-[9px] text-[#2563ff]">
+            <span className="text-xs text-[#7cb9ff]">
               ~/projects
             </span>
           </div>
 
-          <div className="min-h-82.5 p-6 text-xs leading-7 md:p-8 md:text-sm">
+          <div className="min-h-72 p-4 text-xs leading-7 md:p-8 md:text-sm">
             <div data-terminal-line>
-              <span className="text-[#2563ff]">
+              <span className="text-[#7cb9ff]">
                 david@42porto
               </span>
 
@@ -185,7 +193,7 @@ export function FortyTwo() {
             </div>
 
             <div data-terminal-line className="mt-8">
-              <span className="text-[#2563ff]">
+              <span className="text-[#7cb9ff]">
                 david@42porto
               </span>
 
@@ -211,7 +219,7 @@ export function FortyTwo() {
               data-terminal-line
               className="mt-8 flex items-center"
             >
-              <span className="text-[#2563ff]">→</span>
+              <span className="text-[#7cb9ff]">→</span>
 
               <span className="ml-3">
                 projects loaded
@@ -229,6 +237,7 @@ export function FortyTwo() {
           <article
             key={project.name}
             data-42-project
+            data-reveal
             className="grid grid-cols-1 gap-6 border-b border-[#1a2232] py-9 md:grid-cols-12 md:gap-8"
           >
             <div className="md:col-span-1">
@@ -237,8 +246,8 @@ export function FortyTwo() {
               </span>
             </div>
 
-            <div className="md:col-span-3">
-              <span className="font-mono text-sm text-[#2563ff]">
+            <div className="wrap-break-word md:col-span-3">
+              <span className="font-mono text-sm text-[#7cb9ff]">
                 $
               </span>
 
@@ -248,25 +257,30 @@ export function FortyTwo() {
             </div>
 
             <div className="md:col-span-5">
-              <h3 className="text-xl font-medium uppercase tracking-[-0.03em] md:text-2xl">
+              <h4 className="text-xl font-medium uppercase tracking-[-0.03em] md:text-2xl">
                 {project.name}
-              </h3>
+              </h4>
 
               <p className="mt-3 max-w-lg text-sm leading-relaxed text-[#8491a7]">
                 {project.description}
               </p>
             </div>
 
-            <div className="flex items-end md:col-span-3 md:justify-end">
-              <div className="font-mono text-xs md:text-right">
-                <span className="block uppercase tracking-[0.18em] text-[#8491a7]">
-                  Output
+            <div className="flex items-center md:col-span-3 md:justify-end">
+              <a
+                href={project.source}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.18em]"
+              >
+                <span className="border-b border-[#2563ff] pb-1 transition-colors duration-300 group-hover:text-[#7cb9ff]">
+                  View source code
                 </span>
 
-                <span className="mt-2 block text-[#7cb9ff]">
-                  {project.output}
+                <span className="text-[#7cb9ff] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                  ↗
                 </span>
-              </div>
+              </a>
             </div>
           </article>
         ))}

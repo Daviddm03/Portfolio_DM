@@ -197,8 +197,7 @@ export function Contact() {
             data-contact-link
             data-reveal
             href={`mailto:${EMAIL}`}
-            className="group grid grid-cols-[56px_minmax(0,1fr)_auto] gap-3 md:grid-cols-[80px_minmax(0,1fr)_auto] items-center border-b border-[#1a2232] py-6"
-          >
+            className="group grid grid-cols-[90px_minmax(0,1fr)_auto] items-center gap-4 border-b border-[#1a2232] py-6 md:grid-cols-[120px_minmax(0,1fr)_auto]"          >
             <span className="text-xs uppercase tracking-[0.22em] text-[#8491a7]">
               Email
             </span>
@@ -219,8 +218,7 @@ export function Contact() {
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group grid grid-cols-[56px_minmax(0,1fr)_auto] gap-3 md:grid-cols-[80px_minmax(0,1fr)_auto] items-center border-b border-[#1a2232] py-6"
-          >
+            className="group grid grid-cols-[90px_minmax(0,1fr)_auto] items-center gap-4 border-b border-[#1a2232] py-6 md:grid-cols-[120px_minmax(0,1fr)_auto]">      
             <span className="text-xs uppercase tracking-[0.22em] text-[#8491a7]">
               GitHub
             </span>
@@ -241,8 +239,7 @@ export function Contact() {
             href={LINKEDIN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group grid grid-cols-[56px_minmax(0,1fr)_auto] gap-3 md:grid-cols-[80px_minmax(0,1fr)_auto] items-center border-b border-[#1a2232] py-6"
-          >
+            className="group grid grid-cols-[90px_minmax(0,1fr)_auto] items-center gap-4 border-b border-[#1a2232] py-6 md:grid-cols-[120px_minmax(0,1fr)_auto]">          
             <span className="text-xs uppercase tracking-[0.22em] text-[#8491a7]">
               LinkedIn
             </span>
@@ -267,7 +264,7 @@ export function Contact() {
           ref={closingTextRef}
           className="border-t border-[#1a2232] pt-6"
         >
-          <div className="flex flex-col gap-8 text-xs uppercase tracking-[0.22em] text-[#8491a7] md:flex-row md:items-end md:justify-between">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-3 text-[9px] uppercase tracking-[0.18em] text-[#8491a7] sm:text-[10px] md:gap-8 md:text-xs md:tracking-[0.22em]">
             <div>
               <span className="block">
                 David Montaño
@@ -278,7 +275,21 @@ export function Contact() {
               </span>
             </div>
 
-            <div className="md:text-center">
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className="group flex cursor-pointer flex-col items-center whitespace-nowrap text-[#f4f7ff]"
+            >
+              <span>
+                Back to top
+              </span>
+
+              <span className="mt-2 inline-block transition-transform duration-300 group-hover:-translate-y-1">
+                ↑
+              </span>
+            </button>
+
+            <div className="text-right">
               <span className="block">
                 Porto, Portugal
               </span>
@@ -287,20 +298,6 @@ export function Contact() {
                 2026
               </span>
             </div>
-
-            <button
-              type="button"
-              onClick={scrollToTop}
-              className="group w-fit cursor-pointer text-left text-[#f4f7ff]"
-            >
-              <span className="inline-block transition-transform duration-300 group-hover:-translate-y-1">
-                ↑
-              </span>
-
-              <span className="ml-3">
-                Back to top
-              </span>
-            </button>
           </div>
         </div>
       </div>

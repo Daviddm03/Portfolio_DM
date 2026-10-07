@@ -38,6 +38,6 @@ export function CursorGlow() {
   return (
     <div ref={glowRef} aria-hidden="true"
       className="pointer-events-none fixed left-0 top-0 z-100 hidden h-130 w-130 rounded-full opacity-0 blur-[20px] md:block"
-      style={{ background: 'radial-gradient(circle, rgba(37, 99, 255, 0.10) 0%, rgba(37, 99, 255, 0.045) 30%, rgba(37, 99, 255, 0.015) 52%, rgba(37, 99, 255, 0) 72%)' }} />
+      style={{ background: 'radial-gradient(circle, rgba(37, 99, 255, 0.20) 0%, rgba(37, 99, 255, 0.045) 30%, rgba(37, 99, 255, 0.015) 52%, rgba(37, 99, 255, 0) 72%)' }} />
   )
 }

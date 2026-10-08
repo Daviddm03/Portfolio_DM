@@ -1,446 +1,262 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const projects = [
+  {
+    number: '01',
+    title: 'Shift Schedule',
+    status: 'Planned',
+    type: 'Web App',
+    description:
+      'Staff scheduling built around shifts, availability and daily operations.',
+    tech: ['React', 'TypeScript', 'Supabase'],
+    visual: 'schedule',
+  },
+  {
+    number: '02',
+    title: 'Event & OS Manager',
+    status: 'Exploring',
+    type: 'Platform',
+    description:
+      'A workspace for events, tasks and service workflows in one place.',
+    tech: ['React', 'Node.js', 'PostgreSQL'],
+    visual: 'operations',
+  },
+  {
+    number: '03',
+    title: 'Room Service QR',
+    status: 'Concept',
+    type: 'Web App',
+    description:
+      'A QR-based ordering experience for hotel guests and service teams.',
+    tech: ['React', 'TypeScript', 'QR'],
+    visual: 'room-service',
+  },
+]
+
+function ScheduleVisual() {
+  return (
+    <div className="w-full max-w-80 font-mono text-[10px] uppercase tracking-[0.12em] text-[#8491a7]">
+      <div className="grid grid-cols-4 border-b border-[#1a2232] pb-3 text-center">
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+      </div>
+
+      <div className="mt-4 grid grid-cols-4 gap-x-3 gap-y-3">
+        <span className="h-1 bg-[#2563ff]" />
+        <span className="h-1 bg-[#1a2232]" />
+        <span className="h-1 bg-[#2563ff]/40" />
+        <span className="h-1 bg-[#2563ff]" />
+
+        <span className="h-1 bg-[#1a2232]" />
+        <span className="h-1 bg-[#2563ff]" />
+        <span className="h-1 bg-[#2563ff]" />
+        <span className="h-1 bg-[#1a2232]" />
+
+        <span className="h-1 bg-[#2563ff]/40" />
+        <span className="h-1 bg-[#2563ff]" />
+        <span className="h-1 bg-[#1a2232]" />
+        <span className="h-1 bg-[#2563ff]" />
+      </div>
+
+      <div className="mt-6 flex items-center justify-between border-t border-[#1a2232] pt-3">
+        <span>12 shifts</span>
+        <span className="text-[#7cb9ff]">Week 04</span>
+      </div>
+    </div>
+  )
+}
+
+function OperationsVisual() {
+  return (
+    <div className="w-full max-w-80 font-mono text-[10px] uppercase tracking-[0.12em]">
+      <div className="flex items-center justify-between border-b border-[#1a2232] pb-3">
+        <span className="text-[#8491a7]">Event 04</span>
+
+        <span className="flex items-center gap-2 text-[#7cb9ff]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#2563ff]" />
+          Live
+        </span>
+      </div>
+
+      <div className="space-y-3 pt-4">
+        <div className="flex justify-between">
+          <span className="text-[#8491a7]">Service</span>
+          <span className="text-[#f4f7ff]">Active</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-[#8491a7]">Team</span>
+          <span className="text-[#f4f7ff]">08</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-[#8491a7]">Tasks</span>
+          <span className="text-[#f4f7ff]">12 / 16</span>
+        </div>
+      </div>
+
+      <div className="mt-5 h-px w-full bg-[#1a2232]">
+        <div className="h-px w-3/4 bg-[#2563ff]" />
+      </div>
+    </div>
+  )
+}
+
+function RoomServiceVisual() {
+  return (
+    <div className="w-full max-w-80 font-mono text-[10px] uppercase tracking-[0.12em]">
+      <div className="flex items-center justify-between border-b border-[#1a2232] pb-3">
+        <span className="text-[#8491a7]">Room 412</span>
+        <span className="text-[#7cb9ff]">Order #024</span>
+      </div>
+
+      <div className="space-y-3 pt-4">
+        <div className="flex justify-between">
+          <span className="text-[#8491a7]">Club Sandwich</span>
+          <span className="text-[#f4f7ff]">01</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span className="text-[#8491a7]">Sparkling Water</span>
+          <span className="text-[#f4f7ff]">02</span>
+        </div>
+      </div>
+
+      <div className="mt-5 flex items-center justify-between border-t border-[#1a2232] pt-3">
+        <span className="text-[#8491a7]">3 items</span>
+        <span className="text-[#7cb9ff]">Ready →</span>
+      </div>
+    </div>
+  )
+}
+
+function ProjectVisual({ type }: { type: string }) {
+  if (type === 'schedule') {
+    return <ScheduleVisual />
+  }
+
+  if (type === 'operations') {
+    return <OperationsVisual />
+  }
+
+  return <RoomServiceVisual />
+}
+
 export function BuildingNext() {
   const sectionRef = useRef<HTMLElement>(null)
-  const headingRef = useRef<HTMLDivElement>(null)
-  const siteRef = useRef<HTMLDivElement>(null)
-  const craneTrolleyRef = useRef<SVGGElement>(null)
-  const craneCableRef = useRef<SVGLineElement>(null)
-  const craneHookRef = useRef<SVGGElement>(null)
-  const shiftBlockRef = useRef<SVGGElement>(null)
-  const truckRef = useRef<HTMLDivElement>(null)
-  const blueprintRef = useRef<HTMLDivElement>(null)
-  const qrRef = useRef<HTMLDivElement>(null)
-  const cranePanelRef = useRef<HTMLDivElement>(null)
-  const truckPanelRef = useRef<HTMLDivElement>(null)
-  const hasPlayedRef = useRef(false)
+  const eyebrowRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const introRef = useRef<HTMLParagraphElement>(null)
+
+  const [openProject, setOpenProject] = useState<string | null>(null)
+
+  const hasHover = () =>
+  window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
   useLayoutEffect(() => {
-    let refreshing = false
-    let refreshFrame = 0
+    const section = sectionRef.current
 
-    const refreshStarted = () => {
-      refreshing = true
-    }
+    if (!section) return
 
-    const refreshFinished = () => {
-      cancelAnimationFrame(refreshFrame)
-      refreshFrame = requestAnimationFrame(() => {
-        refreshing = false
+    const ctx = gsap.context(() => {
+      const reduce = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      ).matches
+
+      if (reduce) return
+
+      const intro = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 78%',
+          once: true,
+        },
       })
-    }
 
-    ScrollTrigger.addEventListener('refreshInit', refreshStarted)
-    ScrollTrigger.addEventListener('refresh', refreshFinished)
-
-    const media = gsap.matchMedia()
-
-    media.add(
-      {
-        all: 'all',
-        desktop: '(min-width: 1024px)',
-        reduce: '(prefers-reduced-motion: reduce)',
-      },
-      context => {
-        const site = siteRef.current
-        const panel = truckPanelRef.current
-
-        if (!site || !panel) return
-
-        const reduce = context.conditions?.reduce
-        const desktop = context.conditions?.desktop
-
-        const truckScale = () =>
-          Math.min(1, (panel.clientWidth * 0.9) / 288)
-
-        const truckPosition = () =>
-          (panel.clientWidth - 288 * truckScale()) / 2 -
-          panel.clientWidth * 0.05
-
-        const setInitialState = () => {
-          site.dataset.state = 'armed'
-
-          gsap.set(craneTrolleyRef.current, {
-            x: -115,
-          })
-
-          gsap.set(craneCableRef.current, {
-            attr: { y2: 140 },
-          })
-
-          gsap.set(craneHookRef.current, {
-            y: -30,
-          })
-
-          gsap.set(shiftBlockRef.current, {
-            x: -115,
-            y: -105,
-          })
-
-          gsap.set(truckRef.current, {
-            x: -320,
-            scale: truckScale(),
-            transformOrigin: 'left bottom',
-          })
-
-          gsap.set('[data-blueprint-line-x]', {
-            scaleX: 0,
-            transformOrigin: 'left center',
-          })
-
-          gsap.set('[data-blueprint-line-y]', {
-            scaleY: 0,
-            transformOrigin: 'center top',
-          })
-
-          gsap.set('[data-blueprint-content]', {
-            opacity: 0,
-            y: 12,
-          })
-
-          gsap.set(qrRef.current, {
-            opacity: 0,
-            scale: 0.85,
-          })
-        }
-
-        const setFinishedState = () => {
-          site.dataset.state = 'finished'
-
-          gsap.set(craneTrolleyRef.current, {
-            x: -40,
-          })
-
-          gsap.set(craneCableRef.current, {
-            attr: { y2: 140 },
-          })
-
-          gsap.set(craneHookRef.current, {
-            y: -30,
-          })
-
-          gsap.set(shiftBlockRef.current, {
-            x: -40,
-            y: 0,
-          })
-
-          gsap.set(truckRef.current, {
-            x: truckPosition(),
-            scale: truckScale(),
-            transformOrigin: 'left bottom',
-          })
-
-          gsap.set('[data-blueprint-line-x]', {
-            scaleX: 1,
-          })
-
-          gsap.set('[data-blueprint-line-y]', {
-            scaleY: 1,
-          })
-
-          gsap.set('[data-blueprint-content]', {
-            opacity: 1,
-            y: 0,
-          })
-
-          gsap.set(qrRef.current, {
-            opacity: 1,
-            scale: 1,
-          })
-        }
-
-        if (reduce) {
-          setFinishedState()
-
-          if (window.scrollY > 10) {
-            hasPlayedRef.current = true
-          }
-
-          const rememberPosition = () => {
-            if (!refreshing) {
-              hasPlayedRef.current = window.scrollY > 10
-            }
-          }
-
-          window.addEventListener('scroll', rememberPosition, {
-            passive: true,
-          })
-
-          const resize = new ResizeObserver(setFinishedState)
-          resize.observe(panel)
-
-          return () => {
-            window.removeEventListener('scroll', rememberPosition)
-            resize.disconnect()
-          }
-        }
-
-        gsap.from(headingRef.current, {
-          y: 30,
+      intro
+        .from(eyebrowRef.current, {
           opacity: 0,
-          duration: 0.7,
+          x: -30,
+          duration: 0.45,
           ease: 'power3.out',
+        })
+        .from(
+          titleRef.current,
+          {
+            opacity: 0,
+            y: 100,
+            duration: 0.8,
+            ease: 'power4.out',
+          },
+          0,
+        )
+        .from(
+          introRef.current,
+          {
+            opacity: 0,
+            y: 30,
+            duration: 0.55,
+            ease: 'power3.out',
+          },
+          0.25,
+        )
+
+      const rows = gsap.utils.toArray<HTMLElement>(
+        '[data-building-row]',
+      )
+
+      rows.forEach(row => {
+        const line = row.querySelector('[data-building-line]')
+        const content = row.querySelectorAll(
+          '[data-building-content]',
+        )
+
+        gsap.set(line, {
+          scaleX: 0,
+          transformOrigin: 'left center',
+        })
+
+        gsap.set(content, {
+          opacity: 0,
+          y: 24,
+        })
+
+        const timeline = gsap.timeline({
           scrollTrigger: {
-            trigger: headingRef.current,
-            start: 'top 82%',
+            trigger: row,
+            start: 'top 84%',
             once: true,
           },
         })
 
-        setInitialState()
-
-        const construction = gsap.timeline({
-          paused: true,
-          onComplete: setFinishedState,
-        })
-
-        construction
+        timeline
+          .to(line, {
+            scaleX: 1,
+            duration: 0.8,
+            ease: 'power3.inOut',
+          })
           .to(
-            craneTrolleyRef.current,
-            {
-              x: -40,
-              duration: 1.5,
-              ease: 'power2.inOut',
-            },
-            0.35,
-          )
-          .to(
-            shiftBlockRef.current,
-            {
-              x: -40,
-              duration: 1.5,
-              ease: 'power2.inOut',
-            },
-            0.35,
-          )
-          .to(
-            craneCableRef.current,
-            {
-              attr: { y2: 245 },
-              duration: 1,
-              ease: 'power2.inOut',
-            },
-            2,
-          )
-          .to(
-            craneHookRef.current,
-            {
-              y: 75,
-              duration: 1,
-              ease: 'power2.inOut',
-            },
-            2,
-          )
-          .to(
-            shiftBlockRef.current,
-            {
-              y: 0,
-              duration: 1,
-              ease: 'power2.inOut',
-            },
-            2,
-          )
-          .to(
-            craneHookRef.current,
-            {
-              y: -30,
-              duration: 0.75,
-              ease: 'power2.inOut',
-            },
-            3.15,
-          )
-          .to(
-            craneCableRef.current,
-            {
-              attr: { y2: 140 },
-              duration: 0.75,
-              ease: 'power2.inOut',
-            },
-            3.15,
-          )
-          .to(
-            truckRef.current,
-            {
-              x: truckPosition,
-              duration: 1.8,
-              ease: 'power3.out',
-            },
-            4.15,
-          )
-          .to(
-            '[data-blueprint-line-x]',
-            {
-              scaleX: 1,
-              stagger: 0.14,
-              duration: 0.65,
-              ease: 'power2.inOut',
-            },
-            6.15,
-          )
-          .to(
-            '[data-blueprint-line-y]',
-            {
-              scaleY: 1,
-              stagger: 0.12,
-              duration: 0.55,
-              ease: 'power2.inOut',
-            },
-            6.45,
-          )
-          .to(
-            '[data-blueprint-content]',
+            content,
             {
               opacity: 1,
               y: 0,
               duration: 0.55,
+              stagger: 0.05,
               ease: 'power3.out',
             },
-            7.05,
+            0.15,
           )
-          .to(
-            qrRef.current,
-            {
-              opacity: 1,
-              scale: 1,
-              duration: 0.45,
-              ease: 'back.out(1.6)',
-            },
-            7.4,
-          )
-
-        let truckEntered = false
-        let blueprintEntered = false
-
-        if (!desktop) {
-          construction.addPause(4.1, () => {
-            if (truckEntered) {
-              construction.play()
-            }
-          })
-
-          construction.addPause(6.1, () => {
-            if (blueprintEntered) {
-              construction.play()
-            }
-          })
-        }
-
-        if (hasPlayedRef.current) {
-          construction.progress(1).pause()
-          setFinishedState()
-        }
-
-        ScrollTrigger.create({
-          trigger: desktop ? site : cranePanelRef.current,
-          start: 'top 60%',
-          onEnter: () => {
-            if (hasPlayedRef.current) return
-
-            hasPlayedRef.current = true
-            site.dataset.state = 'playing'
-            construction.restart()
-          },
-        })
-
-        if (!desktop) {
-          ScrollTrigger.create({
-            trigger: panel,
-            start: 'top 70%',
-            onEnter: () => {
-              truckEntered = true
-
-              if (
-                hasPlayedRef.current &&
-                construction.paused() &&
-                construction.time() < 6.1
-              ) {
-                construction.play()
-              }
-            },
-          })
-
-          ScrollTrigger.create({
-            trigger: blueprintRef.current,
-            start: 'top 70%',
-            onEnter: () => {
-              blueprintEntered = true
-
-              if (
-                hasPlayedRef.current &&
-                construction.paused() &&
-                construction.time() < construction.duration()
-              ) {
-                construction.play()
-              }
-            },
-          })
-        }
-
-        let atTop = window.scrollY <= 10
-
-        const handleScroll = () => {
-          const nextAtTop = window.scrollY <= 10
-
-          if (!refreshing && nextAtTop && !atTop) {
-            hasPlayedRef.current = false
-            truckEntered = false
-            blueprintEntered = false
-
-            construction.invalidate().pause(0)
-            setInitialState()
-          }
-
-          atTop = nextAtTop
-        }
-
-        window.addEventListener('scroll', handleScroll, {
-          passive: true,
-        })
-
-        let previousWidth = panel.clientWidth
-
-        const resize = new ResizeObserver(() => {
-          if (panel.clientWidth === previousWidth) return
-
-          previousWidth = panel.clientWidth
-
-          if (hasPlayedRef.current) {
-            construction.progress(1).pause()
-            setFinishedState()
-          } else {
-            gsap.set(truckRef.current, {
-              scale: truckScale(),
-            })
-          }
-        })
-
-        resize.observe(panel)
-
-        return () => {
-          window.removeEventListener('scroll', handleScroll)
-          resize.disconnect()
-        }
-      },
-    )
+      })
+    }, section)
 
     return () => {
-      media.revert()
-
-      ScrollTrigger.removeEventListener(
-        'refreshInit',
-        refreshStarted,
-      )
-
-      ScrollTrigger.removeEventListener(
-        'refresh',
-        refreshFinished,
-      )
-
-      cancelAnimationFrame(refreshFrame)
+      ctx.revert()
     }
   }, [])
 
@@ -453,442 +269,182 @@ export function BuildingNext() {
       className="relative overflow-hidden px-6 py-24 md:px-10 md:py-32"
     >
       <div
-        ref={headingRef}
-        data-reveal
-        className="mx-auto max-w-7xl"
+        ref={eyebrowRef}
+        className="mb-16 flex items-center gap-5"
       >
         <span className="text-xs uppercase tracking-[0.25em] text-[#7cb9ff]">
           03 — Building Next
         </span>
+      </div>
 
-        <div className="mt-14">
+      <div className="grid grid-cols-1 gap-14 md:grid-cols-12">
+        <div className="overflow-hidden md:col-span-8">
           <h2
+            ref={titleRef}
             id="building-title"
-            className="text-[clamp(3.5rem,8vw,9rem)] font-semibold uppercase leading-[0.78] tracking-[-0.07em]"
+            className="text-[clamp(3rem,11vw,12rem)] font-semibold uppercase leading-[0.85] tracking-[-0.075em]"
           >
             Currently
             <br />
             Building
             <span className="text-[#2563ff]">.</span>
           </h2>
+        </div>
 
-          <p className="mt-8 max-w-lg text-base leading-relaxed text-[#8491a7] md:text-lg">
+        <div className="flex items-end md:col-span-4">
+          <p
+            ref={introRef}
+            className="max-w-md text-base leading-relaxed text-[#8491a7] md:text-lg"
+          >
             Ideas currently moving from concept into functional software.
           </p>
         </div>
       </div>
 
-      <div
-        ref={siteRef}
-        data-construction-site
-        className="relative mx-auto mt-16 max-w-7xl overflow-hidden border-y border-[#1a2232]"
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-12">
-          <div
-            ref={cranePanelRef}
-            className="relative min-h-70 overflow-hidden border-b border-[#1a2232] lg:col-span-6 lg:min-h-107.5 lg:border-b-0 lg:border-r"
-          >
-            <div className="absolute left-5 top-5 z-20">
-              <span className="font-mono text-xs text-[#7cb9ff]">
-                01
-              </span>
+      <div className="mt-20 md:mt-28">
+        <div className="hidden grid-cols-[80px_minmax(0,1fr)_180px_140px_40px] items-center gap-6 border-b border-[#1a2232] pb-5 font-mono text-[10px] uppercase tracking-[0.18em] text-[#8491a7] lg:grid">
+          <span>Index</span>
+          <span>Project</span>
+          <span>Status</span>
+          <span>Type</span>
+          <span />
+        </div>
 
-              <h3 id="shift-schedule-label" className="ml-4 inline text-xs font-normal uppercase tracking-[0.08em] text-[#8491a7]">
-                Shift Schedule · Planned
-              </h3>
-            </div>
-            <svg
-              viewBox="0 0 700 430"
-              className="absolute inset-0 h-full w-full"
-              role="img"
-              aria-labelledby="shift-schedule-label"
-              aria-describedby="shift-schedule-description"
+        {projects.map(project => {
+          const isOpen = openProject === project.number
+
+          return (
+            <article
+              key={project.number}
+              data-building-row
+              onMouseEnter={() => {
+                if (hasHover()) {
+                  setOpenProject(project.number)
+                }
+              }}
+              onMouseLeave={() => {
+                if (hasHover()) {
+                  setOpenProject(null)
+                }
+              }}
+              className="group relative"
             >
-              <line
-                x1="135"
-                y1="90"
-                x2="135"
-                y2="390"
-                stroke="#1a2232"
-                strokeWidth="2"
-              />
-
-              <line
-                x1="165"
-                y1="90"
-                x2="165"
-                y2="390"
-                stroke="#1a2232"
-                strokeWidth="2"
-              />
-
-              <line
-                x1="135"
-                y1="120"
-                x2="165"
-                y2="160"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="165"
-                y1="120"
-                x2="135"
-                y2="160"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="135"
-                y1="160"
-                x2="165"
-                y2="200"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="165"
-                y1="160"
-                x2="135"
-                y2="200"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="135"
-                y1="200"
-                x2="165"
-                y2="240"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="165"
-                y1="200"
-                x2="135"
-                y2="240"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="135"
-                y1="240"
-                x2="165"
-                y2="280"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="165"
-                y1="240"
-                x2="135"
-                y2="280"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="135"
-                y1="280"
-                x2="165"
-                y2="320"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="165"
-                y1="280"
-                x2="135"
-                y2="320"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="85"
-                y1="90"
-                x2="590"
-                y2="90"
-                stroke="#2563ff"
-                strokeWidth="2"
-              />
-
-              <line
-                x1="150"
-                y1="55"
-                x2="590"
-                y2="90"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="150"
-                y1="55"
-                x2="85"
-                y2="90"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="210"
-                y1="60"
-                x2="250"
-                y2="90"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="290"
-                y1="66"
-                x2="330"
-                y2="90"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="370"
-                y1="72"
-                x2="410"
-                y2="90"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="450"
-                y1="78"
-                x2="490"
-                y2="90"
-                stroke="#1a2232"
-              />
-
-              <g ref={craneTrolleyRef}>
-                <rect
-                  x="455"
-                  y="84"
-                  width="30"
-                  height="12"
-                  fill="#080c16"
-                  stroke="#2563ff"
-                />
-
-                <circle
-                  cx="461"
-                  cy="96"
-                  r="3"
-                  fill="#2563ff"
-                />
-
-                <circle
-                  cx="479"
-                  cy="96"
-                  r="3"
-                  fill="#2563ff"
-                />
-
-                <line
-                  ref={craneCableRef}
-                  data-crane-cable
-                  x1="470"
-                  y1="96"
-                  x2="470"
-                  y2="170"
-                  stroke="#2563ff"
-                />
-
-                <g ref={craneHookRef}>
-                  <circle
-                    data-crane-hook
-                    cx="470"
-                    cy="170"
-                    r="5"
-                    fill="#2563ff"
-                  />
-
-                  <path
-                    d="M470 175 C470 190 485 190 485 177"
-                    fill="none"
-                    stroke="#2563ff"
-                    strokeWidth="2"
-                  />
-                </g>
-              </g>
-
-              <line
-                x1="50"
-                y1="390"
-                x2="650"
-                y2="390"
-                stroke="#1a2232"
-              />
-
-              <line
-                x1="410"
-                y1="382"
-                x2="590"
-                y2="382"
-                stroke="#2563ff"
-                strokeDasharray="5 7"
-                opacity="0.45"
-              />
-
-              <g
-                ref={shiftBlockRef}
-                data-shift-block
-              >
-                <foreignObject
-                  x="340"
-                  y="270"
-                  width="290"
-                  height="145"
-                >
-                  <div className="flex h-full flex-col justify-center border border-[#2563ff]/50 bg-[#080c16] px-5">
-                    <div className="text-[40px] font-medium uppercase leading-[0.88] tracking-[-0.04em]">
-                      Shift
-                      <br />
-                      Schedule
-                      <span className="text-[#2563ff]">.</span>
-                    </div>
-                    <p id="shift-schedule-description" className="mt-4 max-w-61.25 text-[11px] normal-case leading-normal tracking-normal text-[#8491a7]">
-                      Staff scheduling built around shifts, availability and daily operations.
-                    </p>
-                  </div>
-                </foreignObject>
-              </g>
-            </svg>
-          </div>
-
-          <div className="grid lg:col-span-6 lg:grid-rows-2">
-            <div
-              ref={truckPanelRef}
-              data-truck-panel
-              className="relative min-h-53.75 overflow-hidden border-b border-[#1a2232]"
-            >
-              <div className="absolute left-5 top-5 z-20">
-                <span className="font-mono text-xs text-[#7cb9ff]">
-                  02
-                </span>
-
-                <span className="ml-4 text-xs uppercase tracking-[0.08em] text-[#8491a7]">
-                  Operations
-                </span>
-              </div>
               <div
-                ref={truckRef}
-                data-truck
-                className="absolute bottom-5 left-[5%] z-10 w-72"
+                data-building-line
+                className={`absolute bottom-0 left-0 h-px w-full transition-colors duration-500 ${
+                  isOpen
+                    ? 'bg-[#2563ff]'
+                    : 'bg-[#1a2232] group-hover:bg-[#2563ff]/60'
+                }`}
+              />
+
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                onClick={() => {
+                  if (!hasHover()) {
+                    setOpenProject(current =>
+                      current === project.number
+                        ? null
+                        : project.number,
+                    )
+                  }
+                }}
+                className="grid w-full cursor-pointer grid-cols-[1fr_auto] gap-x-6 py-8 text-left lg:grid-cols-[80px_minmax(0,1fr)_180px_140px_40px] lg:items-center lg:gap-6 lg:py-10"
               >
-                <div className="ml-16 w-52 border border-[#1a2232] bg-[#080c16] px-4 py-4">
-                  <h3 className="text-lg font-medium uppercase leading-[0.95] tracking-[-0.035em]">
-                    Event & OS
-                    <br />
-                    Manager
+                <div
+                  data-building-content
+                  className="col-start-1 row-start-1 lg:col-auto lg:row-auto"
+                >
+                  <span className="font-mono text-xs text-[#7cb9ff]">
+                    {project.number}
+                  </span>
+                </div>
+
+                <div
+                  data-building-content
+                  className="col-span-2 mt-8 lg:col-span-1 lg:mt-0"
+                >
+                  <h3 className="text-[clamp(2rem,3.4vw,3.5rem)] font-medium uppercase leading-[0.9] tracking-[-0.045em] transition-colors duration-300 group-hover:text-[#7cb9ff]">
+                    {project.title}
                     <span className="text-[#2563ff]">.</span>
                   </h3>
-
-                  <p className="mt-3 text-[10px] normal-case leading-4 tracking-normal text-[#8491a7]">
-                    Managing events, tasks and service workflows in one place.
-                  </p>
                 </div>
 
-                <div className="relative mt-1 h-14 w-72">
-                  <div className="absolute bottom-4 left-0 h-5 w-64 border border-[#2563ff]/50" />
-
-                  <div className="absolute bottom-9 left-5 h-7 w-14 border border-[#1a2232]" />
-
-                  <div className="absolute bottom-0 left-7 h-8 w-8 rounded-full border border-[#2563ff] bg-[#05070d]">
-                    <span className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2563ff]" />
-                  </div>
-
-                  <div className="absolute bottom-0 left-58.75 h-8 w-8 rounded-full border border-[#2563ff] bg-[#05070d]">
-                    <span className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2563ff]" />
-                  </div>
+                <div
+                  data-building-content
+                  className="col-start-2 row-start-1 flex justify-end lg:col-auto lg:row-auto lg:justify-start"
+                >
+                  <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[#7cb9ff]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#2563ff]" />
+                    {project.status}
+                  </span>
                 </div>
-              </div>
-            </div>
 
-            <div
-              ref={blueprintRef}
-              className="relative min-h-53.75 overflow-hidden"
-            >
-              <div className="absolute left-5 top-5">
-                <span className="font-mono text-xs text-[#7cb9ff]">
-                  03
-                </span>
+                <div
+                  data-building-content
+                  className="col-start-1 mt-5 lg:col-auto lg:mt-0"
+                >
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#8491a7]">
+                    {project.type}
+                  </span>
+                </div>
 
-                <span className="ml-4 text-xs uppercase tracking-[0.08em] text-[#8491a7]">
-                  Guest Experience
-                </span>
-              </div>
-
-              <div className="absolute bottom-8 left-[8%] right-[8%]">
-                <div className="relative px-5 py-5">
-                  <div
-                    data-blueprint-line-x
-                    className="absolute left-0 right-0 top-0 h-px bg-[#2563ff]/60"
-                  />
-
-                  <div
-                    data-blueprint-line-x
-                    className="absolute bottom-0 left-0 right-0 h-px bg-[#2563ff]/60"
-                  />
-
-                  <div
-                    data-blueprint-line-y
-                    className="absolute bottom-0 left-0 top-0 w-px bg-[#2563ff]/60"
-                  />
-
-                  <div
-                    data-blueprint-line-y
-                    className="absolute bottom-0 right-0 top-0 w-px bg-[#2563ff]/60"
-                  />
-
-                  <div
-                    data-blueprint-content
-                    className="flex items-end justify-between gap-6"
+                <div
+                  data-building-content
+                  className="col-start-2 mt-5 flex justify-end lg:col-auto lg:mt-0"
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`text-lg text-[#7cb9ff] transition-transform duration-500 ${
+                      isOpen ? 'rotate-90' : ''
+                    }`}
                   >
-                    <div>
-                      <h3 className="mt-2 text-lg font-medium uppercase leading-[0.95] tracking-[-0.035em]">
-                        Room Service
-                        <br />
-                        QR
-                        <span className="text-[#2563ff]">.</span>
-                      </h3>
+                    →
+                  </span>
+                </div>
+              </button>
 
-                      <p className="mt-3 max-w-82.5 text-[11px] leading-5 text-[#8491a7]">
-                        A QR-based ordering experience designed to simplify
-                        room service for guests and hotel teams.
+              <div
+                className={`grid transition-[grid-template-rows,opacity] duration-500 ease-out ${
+                  isOpen
+                    ? 'grid-rows-[1fr] opacity-100'
+                    : 'grid-rows-[0fr] opacity-0'
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="grid gap-10 pb-10 lg:grid-cols-[80px_minmax(0,1fr)_minmax(280px,0.7fr)] lg:gap-6 lg:pb-12">
+                    <div className="hidden lg:block" />
+
+                    <div>
+                      <p className="max-w-lg text-sm leading-relaxed text-[#8491a7] md:text-base">
+                        {project.description}
                       </p>
+
+                      <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+                        {project.tech.map(tech => (
+                          <span
+                            key={tech}
+                            className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#8491a7]"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
                     </div>
 
                     <div
-                      ref={qrRef}
                       aria-hidden="true"
-                      className="grid h-14 w-14 grid-cols-4 grid-rows-4 gap-1"
+                      className="flex items-center border-[#1a2232] lg:border-l lg:pl-10"
                     >
-                      <span className="border border-[#2563ff]" />
-                      <span className="bg-[#2563ff]" />
-                      <span />
-                      <span className="border border-[#2563ff]" />
-
-                      <span className="bg-[#2563ff]" />
-                      <span />
-                      <span className="bg-[#2563ff]" />
-                      <span />
-
-                      <span />
-                      <span className="bg-[#2563ff]" />
-                      <span />
-                      <span className="bg-[#2563ff]" />
-
-                      <span className="border border-[#2563ff]" />
-                      <span />
-                      <span className="bg-[#2563ff]" />
-                      <span className="border border-[#2563ff]" />
+                      <ProjectVisual type={project.visual} />
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </article>
+          )
+        })}
       </div>
     </section>
   )

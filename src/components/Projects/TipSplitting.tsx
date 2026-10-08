@@ -87,9 +87,7 @@ export function TipSplitting() {
             </h3>
 
             <p className="mt-8 max-w-sm text-base leading-relaxed text-[#8491a7] md:text-lg">
-              A tool for calculating and distributing staff tips across
-              multiple hotel outlets using working hours and distribution
-              rules.
+              A tip calculator inspired by my work in hospitality, distributing staff tips across hotel outlets based on hours worked.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs uppercase tracking-widest text-[#8491a7]">

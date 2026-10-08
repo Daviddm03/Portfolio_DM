@@ -135,7 +135,7 @@ export function Contact() {
           data-reveal
           className="mb-8 text-xs uppercase tracking-[0.28em] text-[#8491a7]"
         >
-          Have an idea?
+          Get in touch
         </p>
 
         <div className="overflow-hidden">
@@ -146,11 +146,11 @@ export function Contact() {
             id="contact-title"
             className="text-[clamp(2.9rem,12vw,14rem)] font-semibold uppercase leading-[0.85] tracking-[-0.08em]"
           >
-            Let's Build
+            LET'S WORK
             <br />
 
             <span className="inline-flex items-end">
-              Something
+              TOGETHER
 
               <span
                 ref={dotRef}
@@ -180,8 +180,7 @@ export function Contact() {
           </div>
 
           <p className="mt-6 max-w-xs text-sm leading-relaxed text-[#8491a7]">
-            Interested in software engineering opportunities, collaborations
-            and products worth building.
+            Open to junior software development opportunities and project collaborations.
           </p>
         </div>
 

@@ -20,12 +20,13 @@ const groups = [
   },
   {
     number: '02',
-    label: 'Motion & UI',
+    label: 'Web & UI',
     technologies: [
       'GSAP',
       'Responsive Design',
       'Accessibility',
-      'Interaction Design',
+      'SEO',
+      'REST APIs',
     ],
   },
   {
@@ -37,7 +38,7 @@ const groups = [
       'Algorithms',
       'Threads',
       'Mutexes',
-      'Memory',
+      'Memory Management',
     ],
   },
   {
@@ -46,10 +47,17 @@ const groups = [
     technologies: [
       'Git',
       'GitHub',
-      'Vite',
       'VS Code',
-      'Figma',
       'Linux',
+    ],
+  },
+  {
+    number: '05',
+    label: 'Currently Learning',
+    technologies: [
+      'C#',
+      'Node.js',
+      'Databases',
     ],
   },
 ]
@@ -190,8 +198,7 @@ export function Stack() {
             data-reveal
             className="max-w-md text-lg leading-relaxed text-[#8491a7]"
           >
-            Technologies are tools. I choose them around the problem,
-            the experience and what the product actually needs.
+            I work mainly with React and TypeScript, with C and UNIX from 42 Porto and GSAP for motion and interaction.
           </p>
         </div>
       </div>

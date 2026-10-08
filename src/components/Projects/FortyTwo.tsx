@@ -129,9 +129,7 @@ export function FortyTwo() {
           </h3>
 
           <p className="mt-8 max-w-md text-base leading-relaxed text-[#8491a7] md:text-lg">
-            Learning software engineering from the foundations through
-            algorithms, memory management, UNIX, concurrency and problem
-            solving in C.
+            C projects from 42 Porto covering algorithms, memory management, UNIX and concurrency.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs uppercase tracking-[0.16em] text-[#8491a7]">
@@ -207,14 +205,6 @@ export function FortyTwo() {
 
               <span>cat selected_projects.txt</span>
             </div>
-
-            <div
-              data-terminal-line
-              className="mt-3 text-[#8491a7]"
-            >
-              Loading selected projects...
-            </div>
-
             <div
               data-terminal-line
               className="mt-8 flex items-center"

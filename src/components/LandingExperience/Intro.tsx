@@ -48,16 +48,13 @@ export function Intro({
               data-intro-detail
               className="max-w-lg text-base leading-relaxed text-[#8491a7] md:text-xl"
             >
-              Software developer based in Porto, focused on turning ideas and
-              real-world problems into functional software.
+            I'm a software developer based in Porto, originally from Brazil. Before software, I worked in hospitality.            
             </p>
-
             <p
               data-intro-detail
               className="max-w-lg text-base leading-relaxed text-[#8491a7] md:text-xl"
             >
-              Building my path through software engineering, hands-on projects
-              and a strong foundation in programming fundamentals.
+              I started programming with C at 42 Porto and now study Software Engineering at ISTEC. Most of my current work is built with React and TypeScript.
             </p>
           </div>
 

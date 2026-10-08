@@ -7,45 +7,52 @@ gsap.registerPlugin(ScrollTrigger)
 const journey = [
   {
     number: '01',
-    label: 'Brazil',
-    title: 'Where it started.',
+    label: 'Brasil',
+    title: 'Growing up in Brasil.',
     description:
-      'Born in Brazil, where curiosity for technology and building things started long before software became the direction.',
+      'I grew up in Rio Grande do Sul, where my interest in technology started.',
   },
   {
     number: '02',
     label: 'Portugal',
-    title: 'A new environment.',
+    title: 'Moving at eighteen.',
     description:
-      'Moving to Portugal meant adapting quickly, learning through experience and building a new path from the ground up.',
+      'I moved to Portugal at 18 and started building my life and career in a new country.',
   },
   {
     number: '03',
     label: 'Hospitality',
-    title: 'Learning from real operations.',
+    title: 'From work to software.',
     description:
-      'Working in hospitality developed communication, attention to detail and the ability to solve problems in fast-moving environments.',
+      'Working in hospitality exposed me to everyday operational problems, some of which later became ideas for software projects.',
   },
   {
     number: '04',
     label: '42 Porto',
-    title: 'Engineering from the foundations.',
+    title: 'Learning through C.',
     description:
-      'At 42 Porto, software became more than interfaces — algorithms, memory, UNIX, concurrency and learning how to solve difficult problems independently.',
+      'At 42 Porto, I worked through projects in C involving algorithms, memory management, UNIX and concurrency, with a strong focus on learning independently.',
   },
   {
-    number: '05',
-    label: 'ISTEC',
-    title: 'Taking software further.',
-    description:
-      'Studying Software Engineering at ISTEC, expanding the practical foundation with a broader understanding of software development, systems and engineering principles.',
+  number: '05',
+  label: 'Hackathon',
+  title: 'Building with a team.',
+  description:
+    'I worked as the frontend lead in a five-person team building a drone delivery platform. The project won the VISUINNOVATION hackathon.',
   },
   {
     number: '06',
-    label: 'Software',
-    title: 'Turning problems into products.',
+    label: 'ISTEC',
+    title: 'Studying Software Engineering.',
     description:
-      'Today, I combine engineering, design and real-world experience to build digital products that are useful, intentional and enjoyable to use.',
+      'I am now studying Software Engineering at ISTEC Porto, continuing what I started at 42 in a broader academic setting.',
+  },
+  {
+    number: '07',
+    label: 'Software',
+    title: 'Where I am now.',
+    description:
+      'Today, most of my work is with React and TypeScript, while I continue developing my software engineering skills through university with C# and personal projects.',
   },
 ]
 
@@ -228,9 +235,9 @@ export function About() {
             id="about-title"
             className="text-[clamp(3rem,11vw,12rem)] font-semibold uppercase leading-[0.85] tracking-[-0.075em]"
           >
-            Beyond
+            HOW
             <br />
-            The Code
+            I GOT HERE
             <span className="text-[#2563ff]">.</span>
           </h2>
         </div>
@@ -241,13 +248,11 @@ export function About() {
         >
           <div>
             <p className="max-w-md text-xl leading-relaxed text-[#f4f7ff]">
-              Software is where different parts of my experience finally
-              started connecting.
+              My route into software wasn't a straight one.
             </p>
 
             <p className="mt-6 max-w-md leading-relaxed text-[#8491a7]">
-              Moving countries, working with people and learning engineering
-              shaped the way I approach problems today.
+              It took me from Brazil to Portugal, through hospitality, 42 Porto and now Software Engineering at ISTEC.
             </p>
           </div>
         </div>

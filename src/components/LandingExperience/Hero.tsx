@@ -63,7 +63,7 @@ export function Hero({
             className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3"
           >
             <span className="text-xs uppercase tracking-[0.12em] text-[#8491a7]">
-              Frontend × Software × Problem Solving
+              React.js × TypeScript × C
             </span>
           </div>
         </div>
@@ -76,9 +76,9 @@ export function Hero({
       >
         <div className="flex items-end gap-5">
           <p className="max-w-65 leading-relaxed text-[#8491a7]">
-            Building software
+            Learning Software
             <br />
-            to solve real problems.
+            by building it
           </p>
         </div>
 

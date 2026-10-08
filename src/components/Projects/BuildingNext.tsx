@@ -11,7 +11,7 @@ const projects = [
     status: 'Planned',
     type: 'Web App',
     description:
-      'Staff scheduling built around shifts, availability and daily operations.',
+      'A scheduling tool for managing staff shifts, availability and weekly schedules.',
     tech: ['React', 'TypeScript', 'Supabase'],
     visual: 'schedule',
   },
@@ -19,20 +19,20 @@ const projects = [
     number: '02',
     title: 'Event & OS Manager',
     status: 'Exploring',
-    type: 'Platform',
+    type: 'Web App',
     description:
-      'A workspace for events, tasks and service workflows in one place.',
+      'A workspace for managing events, service tasks and day-to-day operations.',
     tech: ['React', 'Node.js', 'PostgreSQL'],
     visual: 'operations',
-  },
+  },   
   {
     number: '03',
     title: 'Room Service QR',
     status: 'Concept',
     type: 'Web App',
     description:
-      'A QR-based ordering experience for hotel guests and service teams.',
-    tech: ['React', 'TypeScript', 'QR'],
+      'A web app for hotel guests to order room service through a QR code.',
+    tech: ['React', 'TypeScript'],
     visual: 'room-service',
   },
 ]
@@ -296,7 +296,7 @@ export function BuildingNext() {
             ref={introRef}
             className="max-w-md text-base leading-relaxed text-[#8491a7] md:text-lg"
           >
-            Ideas currently moving from concept into functional software.
+          Projects I'm exploring, planning and building next.     
           </p>
         </div>
       </div>

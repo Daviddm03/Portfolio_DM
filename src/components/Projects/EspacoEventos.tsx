@@ -99,7 +99,7 @@ export function EspacoEventos() {
               <span>React</span>
               <span>TypeScript</span>
               <span>GSAP</span>
-              <span>Tailwind</span>
+              <span>Tailwind CSS</span>
             </div>
           </div>
 

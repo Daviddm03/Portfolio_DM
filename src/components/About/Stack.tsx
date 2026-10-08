@@ -56,69 +56,82 @@ const groups = [
 
 export function Stack() {
   const sectionRef = useRef<HTMLElement>(null)
-
   const eyebrowRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const descriptionRef = useRef<HTMLParagraphElement>(null)
-
   const matrixRef = useRef<HTMLDivElement>(null)
   const scannerRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     const media = gsap.matchMedia()
+
     media.add('(prefers-reduced-motion: no-preference)', () => {
-      /*
+      /**
        * SECTION INTRO
        */
-      revealGroup([eyebrowRef.current, titleRef.current, descriptionRef.current], sectionRef.current)
+      revealGroup(
+        [
+          eyebrowRef.current,
+          titleRef.current,
+          descriptionRef.current,
+        ],
+        sectionRef.current,
+      )
 
-      /*
+      /**
        * MATRIX ROWS
        */
-      sectionRef.current?.querySelectorAll('[data-stack-row], [data-stack-support]').forEach(group => revealGroup(group, group))
+      sectionRef.current
+        ?.querySelectorAll('[data-stack-row]')
+        .forEach(group => revealGroup(group, group))
 
-      /*
+      /**
        * BLUE SCANNER
        */
-      gsap.fromTo(
-        scannerRef.current,
-        {
-          y: 0,
-        },
-        {
-          y: () => matrixRef.current?.clientHeight ?? 0,
-          ease: 'none',
-
-          scrollTrigger: {
-            trigger: matrixRef.current,
-            start: 'top 65%',
-            end: 'bottom 65%',
-            scrub: 1,
-            invalidateOnRefresh: true,
+      if (scannerRef.current && matrixRef.current) {
+        gsap.fromTo(
+          scannerRef.current,
+          {
+            y: 0,
           },
-        },
-      )
+          {
+            y: () => matrixRef.current?.clientHeight ?? 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: matrixRef.current,
+              start: 'top 65%',
+              end: 'bottom 65%',
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          },
+        )
+      }
 
-      /*
+      /**
        * LARGE DECORATIVE TEXT
        */
-      gsap.fromTo(
-        '[data-stack-background]',
-        {
-          xPercent: -10,
-        },
-        {
-          xPercent: 8,
-          ease: 'none',
+      const stackBackground =
+        sectionRef.current?.querySelector('[data-stack-background]')
 
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1,
+      if (stackBackground) {
+        gsap.fromTo(
+          stackBackground,
+          {
+            xPercent: -10,
           },
-        },
-      )
+          {
+            xPercent: 8,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          },
+        )
+      }
     }, sectionRef)
 
     return () => media.revert()
@@ -197,7 +210,7 @@ export function Stack() {
           className="pointer-events-none absolute left-0 right-0 top-0 z-20 h-px bg-[#2563ff] opacity-60 shadow-[0_0_30px_4px_rgba(37,99,255,0.2)]"
         />
 
-        {groups.map((group) => (
+        {groups.map(group => (
           <div
             key={group.label}
             data-stack-row
@@ -227,7 +240,7 @@ export function Stack() {
 
             {/* Technologies */}
             <div className="mt-8 flex flex-wrap gap-x-3 gap-y-3 md:col-span-8 md:mt-0">
-              {group.technologies.map((technology) => (
+              {group.technologies.map(technology => (
                 <span
                   key={technology}
                   data-technology
@@ -240,65 +253,6 @@ export function Stack() {
           </div>
         ))}
       </div>
-
-      {/* Philosophy */}
-      <div data-stack-support data-scroll-reveal data-reveal className="relative z-10 mx-auto mt-20 max-w-7xl">
-        <div className="grid grid-cols-1 gap-12 border-b border-[#1a2232] pb-16 md:grid-cols-12">
-          <div className="md:col-span-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#7cb9ff]">
-              Approach
-            </span>
-          </div>
-
-          <div className="md:col-span-9">
-            <p className="max-w-5xl text-[clamp(2rem,4vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.045em]">
-              I don't want to collect technologies.
-              <span className="text-[#8491a7]">
-                {' '}
-                I want to understand how to use them to build better
-                products.
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Current focus */}
-      <div data-stack-support data-scroll-reveal data-reveal className="relative z-10 mx-auto mt-20 max-w-7xl">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
-          <div className="md:col-span-3">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#8491a7]">
-              Current Focus
-            </span>
-          </div>
-
-          <div className="md:col-span-9">
-            <div className="flex flex-wrap gap-x-10 gap-y-5">
-              <div className="flex items-center gap-3">
-
-                <span className="text-sm uppercase tracking-[0.16em]">
-                  Frontend Engineering
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3">
-
-                <span className="text-sm uppercase tracking-[0.16em]">
-                  Software Engineering
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3">
-
-                <span className="text-sm uppercase tracking-[0.16em]">
-                  Product Development
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </section>
   )
 }

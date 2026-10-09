@@ -76,9 +76,9 @@ export function Hero({
       >
         <div className="flex items-end gap-5">
           <p className="max-w-65 leading-relaxed text-[#8491a7]">
-            Learning Software
+            LEARNING BY
             <br />
-            by building it
+            BUILDING SOFTWARE
           </p>
         </div>
 

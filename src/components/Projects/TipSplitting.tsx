@@ -7,7 +7,7 @@ import { revealGroup } from '../../animations/reveal'
 gsap.registerPlugin(ScrollTrigger)
 
 const PROJECT_URL =
-  'https://tip-splitting-calculator.vercel.app/#calculation'
+  'https://tipsplittingcalculator.vercel.app/#calculation'
 
 const GITHUB_URL =
   'https://github.com/Daviddm03/tipSplittingCalculator'
@@ -87,14 +87,13 @@ export function TipSplitting() {
             </h3>
 
             <p className="mt-8 max-w-sm text-base leading-relaxed text-[#8491a7] md:text-lg">
-              A tip calculator inspired by my work in hospitality, distributing staff tips across hotel outlets based on hours worked.
+              A tip calculator inspired by my work in hospitality, distributing staff tips across hotel outlets based on days worked.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs uppercase tracking-widest text-[#8491a7]">
               <span>JavaScript</span>
               <span>HTML</span>
               <span>CSS</span>
-              <span>Local Storage</span>
             </div>
           </div>
 

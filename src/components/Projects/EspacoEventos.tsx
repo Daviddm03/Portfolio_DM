@@ -6,7 +6,7 @@ import { revealGroup } from '../../animations/reveal'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const PROJECT_URL = 'https://espaco-eventos-ycb5.vercel.app/'
+const PROJECT_URL = 'https://espacoeventos.vercel.app/'
 
 export function EspacoEventos() {
   const sectionRef = useRef<HTMLElement>(null)

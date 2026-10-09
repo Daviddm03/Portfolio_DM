@@ -159,6 +159,19 @@ export function BuildingNext() {
   const hasHover = () =>
   window.matchMedia('(hover: hover) and (pointer: fine)').matches
 
+  const handleProjectClick = (
+    projectNumber: string,
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    // On desktop, pointer interaction is controlled by hover.
+    // Keyboard-generated clicks have detail === 0.
+    if (hasHover() && event.detail !== 0) return
+
+    setOpenProject(current =>
+      current === projectNumber ? null : projectNumber,
+    )
+  }
+
   useLayoutEffect(() => {
     const section = sectionRef.current
 
@@ -341,15 +354,8 @@ export function BuildingNext() {
               <button
                 type="button"
                 aria-expanded={isOpen}
-                onClick={() => {
-                  if (!hasHover()) {
-                    setOpenProject(current =>
-                      current === project.number
-                        ? null
-                        : project.number,
-                    )
-                  }
-                }}
+                aria-controls={`building-panel-${project.number}`}
+                onClick={event => handleProjectClick(project.number, event)}
                 className="grid w-full cursor-pointer grid-cols-[1fr_auto] gap-x-6 py-8 text-left lg:grid-cols-[80px_minmax(0,1fr)_180px_140px_40px] lg:items-center lg:gap-6 lg:py-10"
               >
                 <div
@@ -406,6 +412,8 @@ export function BuildingNext() {
               </button>
 
               <div
+                id={`building-panel-${project.number}`}
+                aria-hidden={!isOpen}
                 className={`grid transition-[grid-template-rows,opacity] duration-500 ease-out ${
                   isOpen
                     ? 'grid-rows-[1fr] opacity-100'

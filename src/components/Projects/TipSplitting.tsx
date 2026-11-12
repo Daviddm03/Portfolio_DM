@@ -7,7 +7,7 @@ import { revealGroup } from '../../animations/reveal'
 gsap.registerPlugin(ScrollTrigger)
 
 const PROJECT_URL =
-  'https://tipsplittingcalculator.vercel.app/#calculation'
+  'https://tipsplittingcalculator.vercel.app/'
 
 const GITHUB_URL =
   'https://github.com/Daviddm03/tipSplittingCalculator'
